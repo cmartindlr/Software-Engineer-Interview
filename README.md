@@ -40,6 +40,7 @@ We expect the task to take anywhere between `45` to `90` minutes.
 
 - [ ] Persist the result set to a database (of your choice)
 - [ ] Use a cloud platform such as Azure, AWS or Google
+- [ ] Demostrate one or more SOLID principles.
 - [ ] Include documentation for your technical choices
   - documentation may be in the form of comments or a markdown file
 - [ ] Credit any packages and sources that helped you solve
