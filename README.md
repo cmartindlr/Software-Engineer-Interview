@@ -15,10 +15,6 @@ You, as the interviewee, are encouraged to:
 
 **We also do not expect to see build artifacts in your pull request.**
 
-## Time
-
-We expect the task to take anywhere between `45` to `90` minutes.
-
 ## Requirements
 
 - GitHub account (personal or anonymous is fine)
