@@ -39,7 +39,7 @@ You, as the interviewee, are encouraged to:
 
 - [ ] Persist the result set to a database (of your choice)
 - [ ] Use a cloud platform such as Azure, AWS or Google
-- [ ] Demostrate one or more SOLID principles.
+- [ ] Demostrate one or more SOLID principles
 - [ ] Include documentation for your technical choices
   - documentation may be in the form of comments or a markdown file
-- [ ] Credit any packages and sources that helped you solve
+- [ ] Credit any packages and sources that helped you with your solution
