@@ -12,6 +12,8 @@ namespace ConsoleSolution.Models.Json
         // All fields are nullable since the source of the data may be improperly structured and
         // matching fields can still be read at least to analyze.
 
+        // This follows the single responsibility principle of SOLID since the sole purpose is to represent a registered person.
+
         /// <summary>
         /// The individual's favorite fruit.
         /// </summary>
