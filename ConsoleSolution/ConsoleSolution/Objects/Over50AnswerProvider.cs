@@ -10,6 +10,9 @@ namespace ConsoleSolution.Objects
     {
         // This follows the Liskov substitution principle of SOLID by allowing this provider to be used wherever an answer provider is desired.
 
+        /// <inheritdoc/>
+        public string Question { get; } = "What is the count of individuals over the age of 50?";
+
         /// <summary>
         /// Gets the count of individuals in the collection over 50.
         /// </summary>

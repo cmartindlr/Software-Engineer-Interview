@@ -11,6 +11,11 @@
         // Simple interface satisfies interface segregation principle in SOLID.
 
         /// <summary>
+        /// The question that this answer provider can answer.
+        /// </summary>
+        string Question { get; }
+
+        /// <summary>
         /// Provides the answer about the data.
         /// </summary>
         /// <param name="data">
