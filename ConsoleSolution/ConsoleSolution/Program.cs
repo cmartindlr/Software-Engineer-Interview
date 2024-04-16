@@ -1,4 +1,9 @@
-﻿namespace ConsoleSolution
+﻿// Credit newtonsoft.
+using Newtonsoft.Json;
+
+using ConsoleSolution.Models.Json;
+
+namespace ConsoleSolution
 {
     internal class Program
     {
