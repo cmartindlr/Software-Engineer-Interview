@@ -24,9 +24,11 @@ namespace ConsoleSolution.Objects
         /// </returns>
         public string ProvideAnswer(IEnumerable<RegisteredPerson> data)
         {
-            return data.Count(x => x.Age != null &&
-                                   x.Age > 50)
-                       .ToString();
+            return "{\n  \"count\": " + 
+                      data.Count(x => x.Age != null &&
+                                      x.Age > 50)
+                          .ToString() + 
+                   "\n}";
         }
     }
 }

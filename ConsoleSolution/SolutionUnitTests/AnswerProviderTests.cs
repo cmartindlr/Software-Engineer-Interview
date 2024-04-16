@@ -62,7 +62,7 @@ namespace SolutionUnitTests
             string answer = ageAnswerProvider.ProvideAnswer(people);
 
             // Check if the answer matches the correct count.
-            Assert.IsTrue(int.Parse(answer) == result, "Count is not the correct count.");
+            Assert.IsTrue(int.Parse(answer.Replace("{", "").Replace("\"count\":", "").Replace("}", "").Trim()) == result, "Count is not the correct count.");
         }
 
         /// <summary>

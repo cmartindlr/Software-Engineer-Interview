@@ -22,7 +22,7 @@
         /// The data to get answers out of.
         /// </param>
         /// <returns>
-        /// The answer as a string suitable for display.
+        /// The answer formatted as a JSON.
         /// </returns>
         string ProvideAnswer(IEnumerable<T> data);
     }
