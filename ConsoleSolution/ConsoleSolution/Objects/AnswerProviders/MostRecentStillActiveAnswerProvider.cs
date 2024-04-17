@@ -58,7 +58,7 @@ namespace ConsoleSolution.Objects.AnswerProviders
                     matchingPeople.Append("[");
                     foreach (RegisteredPerson person in people.OrderBy(x => x.Name?.FormattedName ?? ""))
                     {
-                        matchingPeople.Append($"\n  {{\n    \"answer\": {JsonConvert.SerializeObject(person, Formatting.Indented).Replace("\n", "\n    ")}\n  }},");
+                        matchingPeople.Append($"\n  {JsonConvert.SerializeObject(person, Formatting.Indented).Replace("\n", "\n  ")},");
                     }
                     matchingPeople.Remove(matchingPeople.Length - 1, 1);
                     matchingPeople.Append("\n]");
@@ -69,7 +69,7 @@ namespace ConsoleSolution.Objects.AnswerProviders
                     RegisteredPerson person = people.First();
 
                     // No specific ask for a certain field, just the person, so return whole person.
-                    return "{\n  \"answer\": " + JsonConvert.SerializeObject(person, Formatting.Indented).Replace("\n", "\n  ") + "\n}";
+                    return JsonConvert.SerializeObject(person, Formatting.Indented);
                 }
             }
         }

@@ -24,7 +24,7 @@ namespace ConsoleSolution.Interfaces
         /// The data set to provide answers over.
         /// </param>
         /// <returns>
-        /// A JSON containing the set of answers in a list.
+        /// A list with the set of answers.
         /// </returns>
         IEnumerable<string> AggregateAnswers(IEnumerable<T> data);
     }

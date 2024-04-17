@@ -6,30 +6,6 @@ namespace SolutionUnitTests
     public class AnswerProviderTests
     {
         /// <summary>
-        /// Tests if all answer providers return JSONs.
-        /// </summary>
-        [TestMethod]
-        public void TestIfValidJson() 
-        {
-            // Get the types derived from IAnswerProvider.
-            IEnumerable<Type> answerProviders = AppDomain.CurrentDomain.GetAssemblies()
-                                                                       .SelectMany(x => x.GetTypes())
-                                                                       .Where(x => typeof(IAnswerProvider<RegisteredPerson>).IsAssignableFrom(x));
-
-            // Loop and instantiate each, ensuring that empty person and valid person both produce valid JSONs.
-            RegisteredPerson emptyPerson = new RegisteredPerson(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
-            RegisteredPerson validPerson = new RegisteredPerson("a", "b", 1.0, 2.0, DateTime.Now, "c", "d", "e", "f", new RegisteredName("g", "h"), "i", 1, "$1.00", false, "j");
-            foreach(Type answerProviderType in answerProviders) 
-            { 
-                IAnswerProvider<RegisteredPerson> answerProvider = (IAnswerProvider<RegisteredPerson>)Activator.CreateInstance(answerProviderType);
-                Assert.IsTrue(JsonConvert.DeserializeObject(answerProvider.ProvideAnswer(new List<RegisteredPerson>())) != null, "No answer for empty list.");
-                Assert.IsTrue(JsonConvert.DeserializeObject(answerProvider.ProvideAnswer(new List<RegisteredPerson>() { emptyPerson })) != null, "No answer for empty person.");
-                Assert.IsTrue(JsonConvert.DeserializeObject(answerProvider.ProvideAnswer(new List<RegisteredPerson>() { validPerson })) != null, "No answer for valid person.");
-                Assert.IsTrue(JsonConvert.DeserializeObject(answerProvider.ProvideAnswer(new List<RegisteredPerson>() { emptyPerson, validPerson })) != null, "No answer for combination.");
-            }
-        }
-
-        /// <summary>
         /// Tests whether the greater age answer provider gives the correct count.
         /// </summary>
         [TestMethod]
@@ -64,7 +40,7 @@ namespace SolutionUnitTests
             string answer = ageAnswerProvider.ProvideAnswer(people);
 
             // Check if the answer matches the correct count.
-            Assert.IsTrue(int.Parse(answer.Replace("{", "").Replace("\"answer\":", "").Replace("}", "").Trim()) == result, "Count is not the correct count.");
+            Assert.IsTrue(int.Parse(answer) == result, "Count is not the correct count.");
         }
 
         /// <summary>
@@ -165,7 +141,7 @@ namespace SolutionUnitTests
                     matchingPeople.Append("[");
                     foreach(RegisteredPerson person in persons.OrderBy(x => x.Name?.FormattedName ?? ""))
                     {
-                        matchingPeople.Append($"\n  {{\n    \"answer\": {JsonConvert.SerializeObject(person, Formatting.Indented).Replace("\n", "\n    ")}\n  }},");
+                        matchingPeople.Append($"\n  {JsonConvert.SerializeObject(person, Formatting.Indented).Replace("\n", "\n  ")},");
                     }
                     matchingPeople.Remove(matchingPeople.Length - 1, 1);
                     matchingPeople.Append("\n]");
@@ -173,7 +149,7 @@ namespace SolutionUnitTests
                 }
                 else 
                 {
-                    result = "{\n  \"answer\": " + JsonConvert.SerializeObject(persons.First(), Formatting.Indented).Replace("\n", "\n  ") + "\n}";
+                    result = JsonConvert.SerializeObject(persons.First(), Formatting.Indented);
                 }
 
                 // Get the provided answer.
@@ -200,7 +176,7 @@ namespace SolutionUnitTests
                 new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
                 new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, null, null, null)
             };
-            string correctAnswer = "{}";
+            string correctAnswer = "NULL";
             string resultingAnswer = answerProvider.ProvideAnswer(people);
             Assert.IsTrue(resultingAnswer == correctAnswer, "Incorrect return value for all nulls.");
 
@@ -211,7 +187,7 @@ namespace SolutionUnitTests
                 new RegisteredPerson("banana" ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
                 new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, null, null, null)
             };
-            correctAnswer = "{\n  \"answer\": {\n    \"apple\": 1,\n    \"banana\": 1\n  }\n}";
+            correctAnswer = "apple: 1,\nbanana: 1";
             resultingAnswer = answerProvider.ProvideAnswer(people);
             Assert.IsTrue(resultingAnswer == correctAnswer, "Incorrect return value for one null.");
 
@@ -222,7 +198,7 @@ namespace SolutionUnitTests
                 new RegisteredPerson("apple" ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
                 new RegisteredPerson("apple" ,null, null, null, null, null, null, null, null, null, null, null, null, null, null)
             };
-            correctAnswer = "{\n  \"answer\": {\n    \"apple\": 3\n  }\n}";
+            correctAnswer = "apple: 3";
             resultingAnswer = answerProvider.ProvideAnswer(people);
             Assert.IsTrue(resultingAnswer == correctAnswer, "Incorrect return value for all same fruit.");
 
@@ -233,7 +209,7 @@ namespace SolutionUnitTests
                 new RegisteredPerson("lime" ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
                 new RegisteredPerson("orange" ,null, null, null, null, null, null, null, null, null, null, null, null, null, null)
             };
-            correctAnswer = "{\n  \"answer\": {\n    \"lemon\": 1,\n    \"lime\": 1,\n    \"orange\": 1\n  }\n}";
+            correctAnswer = "lemon: 1,\nlime: 1,\norange: 1";
             resultingAnswer = answerProvider.ProvideAnswer(people);
             Assert.IsTrue(resultingAnswer == correctAnswer, "Incorrect return value for all different.");
 
@@ -251,7 +227,7 @@ namespace SolutionUnitTests
                 new RegisteredPerson("apple" ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
                 new RegisteredPerson("apple" ,null, null, null, null, null, null, null, null, null, null, null, null, null, null)
             };
-            correctAnswer = "{\n  \"answer\": {\n    \"apple\": 3,\n    \"cherry\": 2,\n    \"lime\": 1,\n    \"raspberry\": 3,\n    \"strawberry\": 1\n  }\n}";
+            correctAnswer = "apple: 3,\ncherry: 2,\nlime: 1,\nraspberry: 3,\nstrawberry: 1";
             resultingAnswer = answerProvider.ProvideAnswer(people);
             Assert.IsTrue(resultingAnswer == correctAnswer, "Incorrect return value for variation.");
         }
@@ -294,30 +270,28 @@ namespace SolutionUnitTests
                 if(eyeColors == null ||
                    !eyeColors.Any())
                 {
-                    correctAnswer = "{}";
+                    correctAnswer = "NULL";
                 }
                 else if(eyeColors.Count() > 1)
                 {
                     // Build a list of answers.
                     StringBuilder matchingPeople = new StringBuilder();
-                    matchingPeople.Append("[");
                     foreach(string eyeColor in eyeColors.OrderBy(x => x))
                     {
-                        matchingPeople.Append($"\n  {{\n    \"answer\": \"{eyeColor}\"\n  }},");
+                        matchingPeople.Append($"{eyeColor},\n");
                     }
-                    matchingPeople.Remove(matchingPeople.Length - 1, 1);
-                    matchingPeople.Append("\n]");
+                    matchingPeople.Remove(matchingPeople.Length - 2, 2);
                     correctAnswer = matchingPeople.ToString();
                 }
                 else 
                 {
                     string actualEyeColor = eyeColors.First();
-                    correctAnswer = "{\n  \"answer\": \"" + actualEyeColor + "\"\n}";
+                    correctAnswer = actualEyeColor;
                 }
             }
             else 
             {
-                correctAnswer = "{}";
+                correctAnswer = "NULL";
             }
 
             // Get the result.
@@ -341,7 +315,7 @@ namespace SolutionUnitTests
 
             // Empty list.
             people = new List<RegisteredPerson>();
-            correctAnswer = "{\n  \"answer\": \"" + 0.00M.ToString("C") + "\"\n}";
+            correctAnswer = 0.00M.ToString("C");
             result = answerProvider.ProvideAnswer(people);
             Assert.IsTrue(result == correctAnswer, "Incorrect answer for empty list.");
 
@@ -354,7 +328,7 @@ namespace SolutionUnitTests
                 new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
                 new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, null, null, null)
             };
-            correctAnswer = "{\n  \"answer\": \"" + 0.00M.ToString("C") + "\"\n}";
+            correctAnswer = 0.00M.ToString("C");
             result = answerProvider.ProvideAnswer(people);
             Assert.IsTrue(result == correctAnswer, "Incorrect answer for no balance.");
 
@@ -368,7 +342,7 @@ namespace SolutionUnitTests
                 new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
                 new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 5.99M.ToString("C"), null, null)
             };
-            correctAnswer = "{\n  \"answer\": \"" + 81.39M.ToString("C") + "\"\n}";
+            correctAnswer = 81.39M.ToString("C");
             result = answerProvider.ProvideAnswer(people);
             Assert.IsTrue(result == correctAnswer, "Incorrect answer for some balances.");
 
@@ -381,7 +355,7 @@ namespace SolutionUnitTests
                 new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 1.00M.ToString("C"), null, null),
                 new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 1.00M.ToString("C"), null, null)
             };
-            correctAnswer = "{\n  \"answer\": \"" + 5.00M.ToString("C") + "\"\n}";
+            correctAnswer = 5.00M.ToString("C");
             result = answerProvider.ProvideAnswer(people);
             Assert.IsTrue(result == correctAnswer, "Incorrect answer for all balances.");
         }
@@ -405,7 +379,7 @@ namespace SolutionUnitTests
             {
                 namedPerson
             };
-            string correctAnswer = "{\n  \"answer\": \"" + namedPerson.Name.FormattedName + "\"\n}";
+            string correctAnswer = namedPerson.Name.FormattedName;
             IAnswerProvider<RegisteredPerson> answerProvider = new FullNameAnswerProvider();
             string result = answerProvider.ProvideAnswer(people);
             Assert.IsTrue(result == correctAnswer, "Incorrect when only person with correct ID is in list.");
@@ -416,7 +390,7 @@ namespace SolutionUnitTests
                 namedPerson,
                 namedPerson
             };
-            correctAnswer = "[\n  {\n    \"answer\": \"" + namedPerson.Name.FormattedName + "\"\n  },\n  {\n    \"answer\": \"" + namedPerson.Name.FormattedName + "\"\n  }\n]";
+            correctAnswer = namedPerson.Name.FormattedName + ",\n" + namedPerson.Name.FormattedName;
             result = answerProvider.ProvideAnswer(people);
             Assert.IsTrue(result == correctAnswer, $"Incorrect when multiple people with correct ID are in list.\n{correctAnswer}\n{result}");
 
@@ -428,7 +402,7 @@ namespace SolutionUnitTests
                 emptyPerson,
                 emptyPerson
             };
-            correctAnswer = "{\n  \"answer\": \"" + namedPerson.Name.FormattedName + "\"\n}";
+            correctAnswer = namedPerson.Name.FormattedName;
             result = answerProvider.ProvideAnswer(people);
             Assert.IsTrue(result == correctAnswer, "Incorrect when person with correct ID is in list with others.");
 
@@ -440,7 +414,7 @@ namespace SolutionUnitTests
                 emptyPerson,
                 unnamedPerson
             };
-            correctAnswer = "{}";
+            correctAnswer = "NULL";
             result = answerProvider.ProvideAnswer(people);
             Assert.IsTrue(result == correctAnswer, "Incorrect when person with correct ID is in list without name.");
 
@@ -451,13 +425,13 @@ namespace SolutionUnitTests
                 emptyPerson,
                 emptyPerson
             };
-            correctAnswer = "{}";
+            correctAnswer = "NULL";
             result = answerProvider.ProvideAnswer(people);
             Assert.IsTrue(result == correctAnswer, "Incorrect when person with correct ID is not in list.");
 
             // ID is not present and list is empty.
             people = new List<RegisteredPerson>();
-            correctAnswer = "{}";
+            correctAnswer = "NULL";
             result = answerProvider.ProvideAnswer(people);
             Assert.IsTrue(result == correctAnswer, "Incorrect when no one is in list.");
         }

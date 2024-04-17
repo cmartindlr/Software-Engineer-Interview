@@ -24,7 +24,7 @@ namespace ConsoleSolution.Objects.AnswerProviders
         public string ProvideAnswer(IEnumerable<RegisteredPerson> data)
         {
             // Simple sum of all fields, 0 if not present.
-            return "{\n  \"answer\": \"" + (data.Any() ? data.Sum(x => x.NumericBalance ?? 0.0M) : 0.0M).ToString("C") + "\"\n}";
+            return (data.Any() ? data.Sum(x => x.NumericBalance ?? 0.0M) : 0.0M).ToString("C");
         }
     }
 }

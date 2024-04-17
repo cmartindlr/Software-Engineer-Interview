@@ -33,26 +33,24 @@ namespace ConsoleSolution.Objects.AnswerProviders
                people.All(x => x.Name == null))
             {
                 // Return empty JSON if null.
-                return "{}";
+                return "NULL";
             }
             else if (people.Count() > 1)
             {
                 // Build a list of answers.
                 StringBuilder matchingPeople = new StringBuilder();
-                matchingPeople.Append("[");
                 foreach (RegisteredPerson person in people)
                 {
-                    matchingPeople.Append($"\n  {{\n    \"answer\": \"{person.Name.FormattedName}\"\n  }},");
+                    matchingPeople.Append($"{person.Name.FormattedName},\n");
                 }
-                matchingPeople.Remove(matchingPeople.Length - 1, 1);
-                matchingPeople.Append("\n]");
+                matchingPeople.Remove(matchingPeople.Length - 2, 2);
                 return matchingPeople.ToString();
             }
             else
             {
                 // Return the only person.
                 RegisteredPerson person = people.First();
-                return $"{{\n  \"answer\": \"{person.Name.FormattedName}\"\n}}";
+                return person.Name.FormattedName;
             }
         }
     }

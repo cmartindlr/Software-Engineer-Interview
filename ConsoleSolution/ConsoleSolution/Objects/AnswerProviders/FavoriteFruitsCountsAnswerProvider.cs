@@ -34,19 +34,17 @@ namespace ConsoleSolution.Objects.AnswerProviders
                !fruitCounts.Any())
             {
                 // If no answer, provide empty JSON.
-                return "{}";
+                return "NULL";
             }
             else
             {
                 // Return a json where each fruit is a number.
                 StringBuilder result = new StringBuilder();
-                result.Append("{\n  \"answer\": {");
                 foreach ((string Fruit, int Count) fruitCount in fruitCounts.OrderBy(x => x.Fruit))
                 {
-                    result.Append("\n    \"" + fruitCount.Fruit + "\": " + fruitCount.Count + ",");
+                    result.Append(fruitCount.Fruit + ": " + fruitCount.Count + ",\n");
                 }
-                result.Remove(result.Length - 1, 1); // Remove last comma.
-                result.Append("\n  }\n}");
+                result.Remove(result.Length - 2, 2); // Remove last comma and newline.
 
                 return result.ToString();
             }

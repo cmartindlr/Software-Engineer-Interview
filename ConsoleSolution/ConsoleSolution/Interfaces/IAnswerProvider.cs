@@ -22,7 +22,7 @@
         /// The data to get answers out of.
         /// </param>
         /// <returns>
-        /// The answer formatted as a JSON.
+        /// The answer, formatted as JSON if complex.
         /// </returns>
         string ProvideAnswer(IEnumerable<T> data); // Uses dependency inversion by depending on an abstraction (IEnumberable).
     }
