@@ -3,6 +3,7 @@ using ConsoleSolution.Models.Json;
 
 // Credit Newtonsoft.
 using Newtonsoft.Json;
+using System.Text;
 
 namespace ConsoleSolution.Objects
 {
@@ -28,20 +29,48 @@ namespace ConsoleSolution.Objects
         public string ProvideAnswer(IEnumerable<RegisteredPerson> data)
         {
             // Get the person.
-            RegisteredPerson? person = data.Where(x => x.IsActive == true &&
-                                                       x.RegistrationDate != null) // Ignore if not active or no date
-                                           .OrderByDescending(x => x.RegistrationDate) // Get most recent date.
-                                           .FirstOrDefault();
+            IEnumerable<IGrouping<DateTime, RegisteredPerson>> dateGroups = 
+                                                   data.Where(x => x.IsActive == true &&
+                                                                   x.RegistrationDate != null) // Ignore if not active or no date
+                                                       .GroupBy(x => x.RegistrationDate.Value); // Get all with same date.
+                                                       
 
-            if(person == null)
+            if(dateGroups == null ||
+               !dateGroups.Any())
             {
                 // If no answer, provide empty JSON.
                 return "{}";
             }
             else
             {
-                // No specific ask for a certain field, just the person, so return whole person.
-                return JsonConvert.SerializeObject(person, Formatting.Indented);
+                IEnumerable<RegisteredPerson>? people = dateGroups.OrderByDescending(x => x.Key)
+                                                                  .FirstOrDefault(); // Get most recent date.
+                if(people == null ||
+                   !people.Any())
+                {
+                    // If no answer, provide empty JSON.
+                    return "{}";
+                }
+                else if(people.Count() > 1) 
+                {
+                    // Build a list of answers.
+                    StringBuilder matchingPeople = new StringBuilder();
+                    matchingPeople.Append("[");
+                    foreach(RegisteredPerson person in people.OrderBy(x => x.Name?.FormattedName ?? ""))
+                    {
+                        matchingPeople.Append($"\n  {{\n    \"answer\": {JsonConvert.SerializeObject(person, Formatting.Indented).Replace("\n", "\n    ")}\n  }},");
+                    }
+                    matchingPeople.Remove(matchingPeople.Length - 1, 1);
+                    matchingPeople.Append("\n]");
+                    return matchingPeople.ToString();
+                }
+                else
+                {
+                    RegisteredPerson person = people.First();
+
+                    // No specific ask for a certain field, just the person, so return whole person.
+                    return "{\n  \"answer\": " + JsonConvert.SerializeObject(person, Formatting.Indented).Replace("\n", "\n  ") + "\n}";
+                }
             }
         }
     }

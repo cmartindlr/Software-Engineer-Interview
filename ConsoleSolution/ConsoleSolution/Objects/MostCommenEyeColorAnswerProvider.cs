@@ -29,20 +29,49 @@ namespace ConsoleSolution.Objects
         /// </returns>
         public string ProvideAnswer(IEnumerable<RegisteredPerson> data)
         {
-            string? mostCommmonEyeColor = data.Where(x => x.EyeColor != null) // Filter out any with no eye color.
-                                              .GroupBy(x => x.EyeColor)
-                                              .OrderByDescending(x => x.Count()) // Get the largest group first.
-                                              .Select(x => x.Key ?? "") // Only care about eye color.
-                                              .FirstOrDefault();
+            IEnumerable<(string EyeColor, int Count)> eyeColorCounts = 
+                                                       data.Where(x => x.EyeColor != null) // Filter out any with no eye color.
+                                                           .GroupBy(x => x.EyeColor)
+                                                           .OrderByDescending(x => x.Count()) // Get the largest group first.
+                                                           .Select(x => (x.Key ?? "", x.Count())); // Only care about eye color and count for now.
+            
 
-            if(mostCommmonEyeColor == null)
+            if(eyeColorCounts == null ||
+               !eyeColorCounts.Any())
             {
-                // If no result, return an empty JSON.
+                // Return empty JSON if null.
                 return "{}";
             }
-            else 
+            else
             {
-                return "{\n  \"eyeColor\": \"" + mostCommmonEyeColor + "\"\n}";
+                int maxCount = eyeColorCounts.Max(x => x.Count);
+                IEnumerable<string> mostCommonEyeColors = eyeColorCounts.Where(x => x.Count == maxCount)
+                                                                        .Select(x => x.EyeColor);
+                if(mostCommonEyeColors == null ||
+                   !mostCommonEyeColors.Any())
+                {
+                    // Return empty JSON if null.
+                    return "{}";
+                }
+                else if(mostCommonEyeColors.Count() > 1)
+                {
+                    // Build a list of answers.
+                    StringBuilder matchingPeople = new StringBuilder();
+                    matchingPeople.Append("[");
+                    foreach(string eyeColor in mostCommonEyeColors.OrderBy(x => x))
+                    {
+                        matchingPeople.Append($"\n  {{\n    \"answer\": \"{eyeColor}\"\n  }},");
+                    }
+                    matchingPeople.Remove(matchingPeople.Length - 1, 1);
+                    matchingPeople.Append("\n]");
+                    return matchingPeople.ToString();
+                }
+                else
+                {
+                    // Return the only value.
+                    string eyeColor = mostCommonEyeColors.First();
+                    return $"{{\n  \"answer\": \"{eyeColor}\"\n}}";
+                }
             }
         }
     }

@@ -40,13 +40,13 @@ namespace ConsoleSolution.Objects
             {
                 // Return a json where each fruit is a number.
                 StringBuilder result = new StringBuilder();
-                result.Append("{");
+                result.Append("{\n  \"answer\": {");
                 foreach((string Fruit, int Count) fruitCount in fruitCounts.OrderBy(x => x.Fruit)) 
                 {
-                    result.Append("\n  \"" + fruitCount.Fruit + "\": " + fruitCount.Count + ",");
+                    result.Append("\n    \"" + fruitCount.Fruit + "\": " + fruitCount.Count + ",");
                 }
                 result.Remove(result.Length - 1, 1); // Remove last comma.
-                result.Append("\n}");
+                result.Append("\n  }\n}");
 
                 return result.ToString();
             }

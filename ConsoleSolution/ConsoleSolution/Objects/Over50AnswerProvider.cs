@@ -24,7 +24,7 @@ namespace ConsoleSolution.Objects
         /// </returns>
         public string ProvideAnswer(IEnumerable<RegisteredPerson> data)
         {
-            return "{\n  \"count\": " + 
+            return "{\n  \"answer\": " + 
                       data.Count(x => x.Age != null && // Ignore missing age.
                                       x.Age > 50) // Ensure age is over 50.
                           .ToString() + 

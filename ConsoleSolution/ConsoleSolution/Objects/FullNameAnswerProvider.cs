@@ -30,17 +30,33 @@ namespace ConsoleSolution.Objects
         public string ProvideAnswer(IEnumerable<RegisteredPerson> data)
         {
             // Find the person by ID.
-            RegisteredPerson? person = data.FirstOrDefault(x => x.ID == "5aabbca3e58dc67745d720b1");
+            IEnumerable<RegisteredPerson> people = data.Where(x => x.ID == "5aabbca3e58dc67745d720b1");
 
-            if(person == null ||
-               person.Name == null)
+            if(people == null ||
+               !people.Any() ||
+               people.All(x => x.Name == null))
             {
                 // Return empty JSON if null.
                 return "{}";
             }
-            else 
+            else if(people.Count() > 1)
             {
-                return "{\n  \"fullName\": \"" + person.Name.FormattedName + "\"\n}";
+                // Build a list of answers.
+                StringBuilder matchingPeople = new StringBuilder();
+                matchingPeople.Append("[");
+                foreach(RegisteredPerson person in people)
+                {
+                    matchingPeople.Append($"\n  {{\n    \"answer\": \"{person.Name.FormattedName}\"\n  }},");
+                }
+                matchingPeople.Remove(matchingPeople.Length - 1, 1);
+                matchingPeople.Append("\n]");
+                return matchingPeople.ToString();
+            }
+            else 
+            { 
+                // Return the only person.
+                RegisteredPerson person = people.First();
+                return $"{{\n  \"answer\": \"{person.Name.FormattedName}\"\n}}";
             }
         }
     }
