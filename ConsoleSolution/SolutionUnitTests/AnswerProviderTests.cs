@@ -327,5 +327,71 @@ namespace SolutionUnitTests
             result = answerProvider.ProvideAnswer(people);
             Assert.IsTrue(result == correctAnswer, "Incorrect answer for all balances.");
         }
+
+        /// <summary>
+        /// Tests the full name answer provider.
+        /// </summary>
+        [TestMethod]
+        public void TestFullNameAnswerProvider() 
+        {
+            RegisteredPerson namedPerson = new RegisteredPerson(null, null, null, null, null, null, null, null, null, 
+                                                                new RegisteredName("Carson", "Tyler"), 
+                                                                null, null, null, null, "5aabbca3e58dc67745d720b1");
+            RegisteredPerson unnamedPerson = new RegisteredPerson(null, null, null, null, null, null, null, null, null, 
+                                                                  null, null, null, null, null, "5aabbca3e58dc67745d720b1");
+            RegisteredPerson emptyPerson = new RegisteredPerson(null, null, null, null, null, null, null, null, null,
+                                                                  null, null, null, null, null, null);
+
+            // ID is present and single person in list.
+            List<RegisteredPerson> people = new List<RegisteredPerson>()
+            {
+                namedPerson
+            };
+            string correctAnswer = "{\n  \"fullName\": \"" + namedPerson.Name.FormattedName + "\"\n}";
+            IAnswerProvider<RegisteredPerson> answerProvider = new FullNameAnswerProvider();
+            string result = answerProvider.ProvideAnswer(people);
+            Assert.IsTrue(result == correctAnswer, "Incorrect when only person with correct ID is in list.");
+
+            // ID is present and several people in list.
+            people = new List<RegisteredPerson>()
+            {
+                namedPerson,
+                emptyPerson,
+                emptyPerson,
+                emptyPerson
+            };
+            correctAnswer = "{\n  \"fullName\": \"" + namedPerson.Name.FormattedName + "\"\n}";
+            result = answerProvider.ProvideAnswer(people);
+            Assert.IsTrue(result == correctAnswer, "Incorrect when person with correct ID is in list with others.");
+
+            // ID is present and no name.
+            people = new List<RegisteredPerson>()
+            {
+                emptyPerson,
+                emptyPerson,
+                emptyPerson,
+                unnamedPerson
+            };
+            correctAnswer = "{}";
+            result = answerProvider.ProvideAnswer(people);
+            Assert.IsTrue(result == correctAnswer, "Incorrect when person with correct ID is in list without name.");
+
+            // ID is not present, but list in not empty.
+            people = new List<RegisteredPerson>()
+            {
+                emptyPerson,
+                emptyPerson,
+                emptyPerson
+            };
+            correctAnswer = "{}";
+            result = answerProvider.ProvideAnswer(people);
+            Assert.IsTrue(result == correctAnswer, "Incorrect when person with correct ID is not in list.");
+
+            // ID is not present and list is empty.
+            people = new List<RegisteredPerson>();
+            correctAnswer = "{}";
+            result = answerProvider.ProvideAnswer(people);
+            Assert.IsTrue(result == correctAnswer, "Incorrect when no one is in list.");
+        }
     }
 }

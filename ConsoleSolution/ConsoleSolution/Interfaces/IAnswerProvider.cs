@@ -24,6 +24,6 @@
         /// <returns>
         /// The answer formatted as a JSON.
         /// </returns>
-        string ProvideAnswer(IEnumerable<T> data);
+        string ProvideAnswer(IEnumerable<T> data); // Uses dependency inversion by depending on an abstraction (IEnumberable).
     }
 }

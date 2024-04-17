@@ -18,7 +18,8 @@ namespace ConsoleSolution
             new MostRecentStillActiveAnswerProvider(),
             new FavoriteFruitsCountsAnswerProvider(),
             new MostCommenEyeColorAnswerProvider(),
-            new TotalBalanceAnswerProvider()
+            new TotalBalanceAnswerProvider(),
+            new FullNameAnswerProvider()
         };
 
         /// <summary>
