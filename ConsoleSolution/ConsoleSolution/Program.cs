@@ -5,6 +5,8 @@ using ConsoleSolution.Models.Json;
 using ConsoleSolution.Interfaces;
 using ConsoleSolution.Objects.AnswerProviders;
 using ConsoleSolution.Objects;
+using ConsoleSolution.Models.Sql;
+using Microsoft.EntityFrameworkCore;
 
 namespace ConsoleSolution
 {
@@ -41,10 +43,27 @@ namespace ConsoleSolution
             // Get the answer for each question.
             IAnswerAggregator<RegisteredPerson> answerAggregator = new MultithreadedAnswerAggregator<RegisteredPerson>(Program._answerProviders);
             int questionNumber = 1;
-            foreach(string result in answerAggregator.AggregateAnswers(people)) 
+            List<string> results = answerAggregator.AggregateAnswers(people).ToList();
+            using(AnswerContext database = new AnswerContext())
             {
-                Console.Write(questionNumber + ". " + Program._answerProviders[questionNumber - 1].Question + "\n" + result + "\n\n");
-                questionNumber++;
+                foreach(string result in results) 
+                {
+                    // Add the result to save.
+                    database.AnswerRecords.Add(new AnswerRecord() 
+                    { 
+                        AnswerDate = DateTime.Now,
+                        FileName = "data.json",
+                        Question = Program._answerProviders[questionNumber - 1].Question,
+                        Answer = result
+                    });
+
+                    // Print out the result.
+                    Console.Write(questionNumber + ". " + Program._answerProviders[questionNumber - 1].Question + "\n" + result + "\n\n");
+                    questionNumber++;
+                }
+
+                // Save results.
+                database.SaveChanges();
             }
         }
     }
