@@ -10,26 +10,32 @@ namespace SolutionUnitTests
     public class AnswerProviderTests
     {
         /// <summary>
+        /// Tests if all answer providers return JSONs.
+        /// </summary>
+        [TestMethod]
+        public void TestIfValidJson() 
+        {
+            // Get the types derived from IAnswerProvider.
+            IEnumerable<Type> answerProviders = AppDomain.CurrentDomain.GetAssemblies()
+                                                                       .SelectMany(x => x.GetTypes())
+                                                                       .Where(x => typeof(IAnswerProvider<RegisteredPerson>).IsAssignableFrom(x));
+
+            // Loop and instantiate each, ensuring that empty person and valid person both produce valid JSONs.
+            RegisteredPerson emptyPerson = new RegisteredPerson(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+            RegisteredPerson validPerson = new RegisteredPerson("a", "b", 1.0, 2.0, DateTime.Now, "c", "d", "e", "f", new RegisteredName("g", "h"), "i", 1, "$1.00", false, "j");
+            foreach(Type answerProviderType in answerProviders) 
+            { 
+                IAnswerProvider<RegisteredPerson> answerProvider = (IAnswerProvider<RegisteredPerson>)Activator.CreateInstance(answerProviderType);
+                Assert.IsTrue(JsonConvert.DeserializeObject(answerProvider.ProvideAnswer(new List<RegisteredPerson>())) != null, "No answer for empty list.");
+                Assert.IsTrue(JsonConvert.DeserializeObject(answerProvider.ProvideAnswer(new List<RegisteredPerson>() { emptyPerson })) != null, "No answer for empty person.");
+                Assert.IsTrue(JsonConvert.DeserializeObject(answerProvider.ProvideAnswer(new List<RegisteredPerson>() { validPerson })) != null, "No answer for valid person.");
+                Assert.IsTrue(JsonConvert.DeserializeObject(answerProvider.ProvideAnswer(new List<RegisteredPerson>() { emptyPerson, validPerson })) != null, "No answer for combination.");
+            }
+        }
+
+        /// <summary>
         /// Tests whether the greater age answer provider gives the correct count.
         /// </summary>
-        /// <param name="age">
-        /// The threshold for the age.
-        /// </param>
-        /// <param name="age1">
-        /// The first age in the list.
-        /// </param>
-        /// <param name="age2">
-        /// The second age in the list.
-        /// </param>
-        /// <param name="age3">
-        /// The third age in the list.
-        /// </param>
-        /// <param name="age4">
-        /// The fourth age in the list.
-        /// </param>
-        /// <param name="age5">
-        /// The fifth age in the list.
-        /// </param>
         [TestMethod]
         [DataRow(1, 2, 3, 4, 5)]
         [DataRow(1, 2, 3, 4, 50)]
@@ -262,6 +268,64 @@ namespace SolutionUnitTests
 
             // Compare results.
             Assert.IsTrue(result == correctAnswer, "Incorrect most common eye color.");
+        }
+
+        /// <summary>
+        /// Tests the total balance answer provider.
+        /// </summary>
+        [TestMethod]
+        public void TestTotalBalanceAnswerProvider() 
+        {
+            IAnswerProvider<RegisteredPerson> answerProvider = new TotalBalanceAnswerProvider();
+            string correctAnswer;
+            string result;
+            List<RegisteredPerson> people;
+
+            // Empty list.
+            people = new List<RegisteredPerson>();
+            correctAnswer = "{\n  \"totalBalance\": \"" + 0.00M.ToString("C") + "\"\n}";
+            result = answerProvider.ProvideAnswer(people);
+            Assert.IsTrue(result == correctAnswer, "Incorrect answer for empty list.");
+
+            // No balances.
+            people = new List<RegisteredPerson>()
+            {
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, null, null, null)
+            };
+            correctAnswer = "{\n  \"totalBalance\": \"" + 0.00M.ToString("C") + "\"\n}";
+            result = answerProvider.ProvideAnswer(people);
+            Assert.IsTrue(result == correctAnswer, "Incorrect answer for no balance.");
+
+
+            // Some balances.
+            people = new List<RegisteredPerson>()
+            {
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 20.00M.ToString("C"), null, null),
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 55.40M.ToString("C"), null, null),
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 5.99M.ToString("C"), null, null)
+            };
+            correctAnswer = "{\n  \"totalBalance\": \"" + 81.39M.ToString("C") + "\"\n}";
+            result = answerProvider.ProvideAnswer(people);
+            Assert.IsTrue(result == correctAnswer, "Incorrect answer for some balances.");
+
+            // All balances.
+            people = new List<RegisteredPerson>()
+            {
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 1.00M.ToString("C"), null, null),
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 1.00M.ToString("C"), null, null),
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 1.00M.ToString("C"), null, null),
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 1.00M.ToString("C"), null, null),
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 1.00M.ToString("C"), null, null)
+            };
+            correctAnswer = "{\n  \"totalBalance\": \"" + 5.00M.ToString("C") + "\"\n}";
+            result = answerProvider.ProvideAnswer(people);
+            Assert.IsTrue(result == correctAnswer, "Incorrect answer for all balances.");
         }
     }
 }

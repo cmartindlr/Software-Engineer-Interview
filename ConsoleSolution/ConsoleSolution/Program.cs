@@ -17,7 +17,8 @@ namespace ConsoleSolution
             new Over50AnswerProvider(),
             new MostRecentStillActiveAnswerProvider(),
             new FavoriteFruitsCountsAnswerProvider(),
-            new MostCommenEyeColorAnswerProvider()
+            new MostCommenEyeColorAnswerProvider(),
+            new TotalBalanceAnswerProvider()
         };
 
         /// <summary>

@@ -13,6 +13,8 @@ namespace ConsoleSolution.Objects
     /// </summary>
     public class MostCommenEyeColorAnswerProvider : IAnswerProvider<RegisteredPerson>
     {
+        // This follows the Liskov substitution principle of SOLID by allowing this provider to be used wherever an answer provider is desired.
+
         /// <inheritdoc/>
         public string Question => "What is the most common eye color?";
 
