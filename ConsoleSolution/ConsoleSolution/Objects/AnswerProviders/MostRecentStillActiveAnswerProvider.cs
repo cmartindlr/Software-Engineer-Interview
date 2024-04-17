@@ -5,7 +5,7 @@ using ConsoleSolution.Models.Json;
 using Newtonsoft.Json;
 using System.Text;
 
-namespace ConsoleSolution.Objects
+namespace ConsoleSolution.Objects.AnswerProviders
 {
     /// <summary>
     /// Determines the most recently active person registered.
@@ -29,13 +29,13 @@ namespace ConsoleSolution.Objects
         public string ProvideAnswer(IEnumerable<RegisteredPerson> data)
         {
             // Get the person.
-            IEnumerable<IGrouping<DateTime, RegisteredPerson>> dateGroups = 
+            IEnumerable<IGrouping<DateTime, RegisteredPerson>> dateGroups =
                                                    data.Where(x => x.IsActive == true &&
                                                                    x.RegistrationDate != null) // Ignore if not active or no date
                                                        .GroupBy(x => x.RegistrationDate.Value); // Get all with same date.
-                                                       
 
-            if(dateGroups == null ||
+
+            if (dateGroups == null ||
                !dateGroups.Any())
             {
                 // If no answer, provide empty JSON.
@@ -45,18 +45,18 @@ namespace ConsoleSolution.Objects
             {
                 IEnumerable<RegisteredPerson>? people = dateGroups.OrderByDescending(x => x.Key)
                                                                   .FirstOrDefault(); // Get most recent date.
-                if(people == null ||
+                if (people == null ||
                    !people.Any())
                 {
                     // If no answer, provide empty JSON.
                     return "{}";
                 }
-                else if(people.Count() > 1) 
+                else if (people.Count() > 1)
                 {
                     // Build a list of answers.
                     StringBuilder matchingPeople = new StringBuilder();
                     matchingPeople.Append("[");
-                    foreach(RegisteredPerson person in people.OrderBy(x => x.Name?.FormattedName ?? ""))
+                    foreach (RegisteredPerson person in people.OrderBy(x => x.Name?.FormattedName ?? ""))
                     {
                         matchingPeople.Append($"\n  {{\n    \"answer\": {JsonConvert.SerializeObject(person, Formatting.Indented).Replace("\n", "\n    ")}\n  }},");
                     }

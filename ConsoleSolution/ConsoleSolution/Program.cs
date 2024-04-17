@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 
 using ConsoleSolution.Models.Json;
 using ConsoleSolution.Interfaces;
+using ConsoleSolution.Objects.AnswerProviders;
 using ConsoleSolution.Objects;
 
 namespace ConsoleSolution
@@ -38,10 +39,11 @@ namespace ConsoleSolution
             }
 
             // Get the answer for each question.
+            IAnswerAggregator<RegisteredPerson> answerAggregator = new MultithreadedAnswerAggregator<RegisteredPerson>(Program._answerProviders);
             int questionNumber = 1;
-            foreach(IAnswerProvider<RegisteredPerson> answerProvider in Program._answerProviders) 
+            foreach(string result in answerAggregator.AggregateAnswers(people)) 
             {
-                Console.Write(questionNumber + ". " + answerProvider.Question + "\n" + (answerProvider.ProvideAnswer(people) ?? "null") + "\n\n");
+                Console.Write(questionNumber + ". " + Program._answerProviders[questionNumber - 1].Question + "\n" + result + "\n\n");
                 questionNumber++;
             }
         }

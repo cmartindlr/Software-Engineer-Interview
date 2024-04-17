@@ -1,7 +1,7 @@
 ﻿using ConsoleSolution.Interfaces;
 using ConsoleSolution.Models.Json;
 
-namespace ConsoleSolution.Objects
+namespace ConsoleSolution.Objects.AnswerProviders
 {
     /// <summary>
     /// Answers the count of individuals over 50.
@@ -24,10 +24,10 @@ namespace ConsoleSolution.Objects
         /// </returns>
         public string ProvideAnswer(IEnumerable<RegisteredPerson> data)
         {
-            return "{\n  \"answer\": " + 
+            return "{\n  \"answer\": " +
                       data.Count(x => x.Age != null && // Ignore missing age.
                                       x.Age > 50) // Ensure age is over 50.
-                          .ToString() + 
+                          .ToString() +
                    "\n}";
         }
     }

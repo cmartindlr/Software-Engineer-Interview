@@ -1,7 +1,7 @@
 ﻿using ConsoleSolution.Interfaces;
 using ConsoleSolution.Models.Json;
 
-namespace ConsoleSolution.Objects
+namespace ConsoleSolution.Objects.AnswerProviders
 {
     /// <summary>
     /// Provider of the answer to "What is the total balance of all individuals combined?"
