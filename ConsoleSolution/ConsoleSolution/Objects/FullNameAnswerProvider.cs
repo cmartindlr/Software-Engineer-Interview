@@ -1,10 +1,6 @@
 ﻿using ConsoleSolution.Interfaces;
 using ConsoleSolution.Models.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleSolution.Objects
 {

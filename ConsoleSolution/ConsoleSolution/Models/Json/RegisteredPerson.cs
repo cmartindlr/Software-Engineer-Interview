@@ -1,4 +1,4 @@
-﻿// Credit Newtonsoft.
+﻿// Credit Newtonsoft. https://www.newtonsoft.com/json
 using Newtonsoft.Json;
 using System.Globalization;
 
@@ -101,7 +101,7 @@ namespace ConsoleSolution.Models.Json
             {
                 if (this.Balance != null &&
                    // Parse only characters that are part of a valid number.
-                   decimal.TryParse(this.Balance, 
+                   decimal.TryParse(this.Balance, // Credit Microsoft. https://learn.microsoft.com/en-us/dotnet/api/system.decimal.tryparse?view=net-8.0
                                     NumberStyles.AllowCurrencySymbol | NumberStyles.Number, // Parse as a number or currency
                                     new CultureInfo("en-US"), // Values are in USD
                                     out decimal balance))

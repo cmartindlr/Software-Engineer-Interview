@@ -1,4 +1,4 @@
-﻿// Credit newtonsoft.
+﻿// Credit newtonsoft. https://www.newtonsoft.com/json
 using Newtonsoft.Json;
 
 using ConsoleSolution.Models.Json;

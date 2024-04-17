@@ -1,7 +1,7 @@
 ﻿using ConsoleSolution.Interfaces;
 using ConsoleSolution.Models.Json;
 
-// Credit Newtonsoft.
+// Credit Newtonsoft. https://www.newtonsoft.com/json
 using Newtonsoft.Json;
 using System.Text;
 
