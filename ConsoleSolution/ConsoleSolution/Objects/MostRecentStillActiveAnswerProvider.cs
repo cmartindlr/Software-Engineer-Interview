@@ -17,13 +17,13 @@ namespace ConsoleSolution.Objects
         public string Question { get; } = "Who is last individual that registered who is still active?";
 
         /// <summary>
-        /// Gets the count of individuals in the collection over 50.
+        /// Gets the most recently active person registered as a JSON.
         /// </summary>
         /// <param name="data">
         /// The data to analyze.
         /// </param>
         /// <returns>
-        /// The number of individuals in the data set over 50.
+        /// The JSON representing the most recently registered active person.
         /// </returns>
         public string ProvideAnswer(IEnumerable<RegisteredPerson> data)
         {

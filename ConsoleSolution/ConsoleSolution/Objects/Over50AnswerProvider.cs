@@ -14,13 +14,13 @@ namespace ConsoleSolution.Objects
         public string Question { get; } = "What is the count of individuals over the age of 50?";
 
         /// <summary>
-        /// Gets the count of individuals in the collection over 50.
+        /// Gets the count of individuals in the collection over 50 as a JSON.
         /// </summary>
         /// <param name="data">
         /// The data to analyze.
         /// </param>
         /// <returns>
-        /// The number of individuals in the data set over 50.
+        /// The number of individuals in the data set over 50 as a JSON.
         /// </returns>
         public string ProvideAnswer(IEnumerable<RegisteredPerson> data)
         {

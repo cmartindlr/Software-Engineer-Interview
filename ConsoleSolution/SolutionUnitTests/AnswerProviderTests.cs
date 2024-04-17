@@ -152,7 +152,77 @@ namespace SolutionUnitTests
                 // Compare the results.
                 Assert.IsTrue(result == answer, "Answer provided did not match.\n" + result + "\n" + answer);
             }
+        }
 
+        /// <summary>
+        /// Tests whether the correct count of favorite fruits is provided.
+        /// </summary>
+        [TestMethod]
+        public void TestFavoriteFruitCountsAnswerProvider() 
+        {
+            IAnswerProvider<RegisteredPerson> answerProvider = new FavoriteFruitsCountsAnswerProvider();
+
+            // All null fruits.
+            List<RegisteredPerson> people = new List<RegisteredPerson>()
+            {
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, null, null, null)
+            };
+            string correctAnswer = "{}";
+            string resultingAnswer = answerProvider.ProvideAnswer(people);
+            Assert.IsTrue(resultingAnswer == correctAnswer, "Incorrect return value for all nulls.");
+
+            // At least one null fruit.
+            people = new List<RegisteredPerson>()
+            {
+                new RegisteredPerson("apple" ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                new RegisteredPerson("banana" ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, null, null, null)
+            };
+            correctAnswer = "{\n  \"apple\": 1,\n  \"banana\": 1\n}";
+            resultingAnswer = answerProvider.ProvideAnswer(people);
+            Assert.IsTrue(resultingAnswer == correctAnswer, "Incorrect return value for one null.");
+
+            // All same fruit.
+            people = new List<RegisteredPerson>()
+            {
+                new RegisteredPerson("apple" ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                new RegisteredPerson("apple" ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                new RegisteredPerson("apple" ,null, null, null, null, null, null, null, null, null, null, null, null, null, null)
+            };
+            correctAnswer = "{\n  \"apple\": 3\n}";
+            resultingAnswer = answerProvider.ProvideAnswer(people);
+            Assert.IsTrue(resultingAnswer == correctAnswer, "Incorrect return value for all same fruit.");
+
+            // All different fruits.
+            people = new List<RegisteredPerson>()
+            {
+                new RegisteredPerson("lemon" ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                new RegisteredPerson("lime" ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                new RegisteredPerson("orange" ,null, null, null, null, null, null, null, null, null, null, null, null, null, null)
+            };
+            correctAnswer = "{\n  \"lemon\": 1,\n  \"lime\": 1,\n  \"orange\": 1\n}";
+            resultingAnswer = answerProvider.ProvideAnswer(people);
+            Assert.IsTrue(resultingAnswer == correctAnswer, "Incorrect return value for all different.");
+
+            // Variation.
+            people = new List<RegisteredPerson>()
+            {
+                new RegisteredPerson("raspberry" ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                new RegisteredPerson("raspberry" ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                new RegisteredPerson("strawberry" ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                new RegisteredPerson("raspberry" ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                new RegisteredPerson("lime" ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                new RegisteredPerson("cherry" ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                new RegisteredPerson("cherry" ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                new RegisteredPerson("apple" ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                new RegisteredPerson("apple" ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                new RegisteredPerson("apple" ,null, null, null, null, null, null, null, null, null, null, null, null, null, null)
+            };
+            correctAnswer = "{\n  \"apple\": 3,\n  \"cherry\": 2,\n  \"lime\": 1,\n  \"raspberry\": 3,\n  \"strawberry\": 1\n}";
+            resultingAnswer = answerProvider.ProvideAnswer(people);
+            Assert.IsTrue(resultingAnswer == correctAnswer, "Incorrect return value for variation.");
         }
     }
 }

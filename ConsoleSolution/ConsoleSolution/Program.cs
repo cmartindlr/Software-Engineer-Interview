@@ -15,7 +15,8 @@ namespace ConsoleSolution
         static List<IAnswerProvider<RegisteredPerson>> _answerProviders = new List<IAnswerProvider<RegisteredPerson>>() 
         { 
             new Over50AnswerProvider(),
-            new MostRecentStillActiveAnswerProvider()
+            new MostRecentStillActiveAnswerProvider(),
+            new FavoriteFruitsCountsAnswerProvider()
         };
 
         /// <summary>
