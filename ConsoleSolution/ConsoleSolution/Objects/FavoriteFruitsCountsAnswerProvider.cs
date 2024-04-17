@@ -25,10 +25,10 @@ namespace ConsoleSolution.Objects
         /// </returns>
         public string ProvideAnswer(IEnumerable<RegisteredPerson> data)
         {
-            // Get the person.
-            IEnumerable<(string Fruit, int Count)> fruitCounts = data.Where(x => x.FavoriteFruit != null)
+            // Get the fruit pair.
+            IEnumerable<(string Fruit, int Count)> fruitCounts = data.Where(x => x.FavoriteFruit != null) // Ignore unspecified favorites.
                                                                      .GroupBy(x => x.FavoriteFruit)
-                                                                     .Select(x => (x.Key ?? "", x.Count()));
+                                                                     .Select(x => (x.Key ?? "", x.Count())); // Get pair of fruit and number of occurrences.
 
             if(fruitCounts == null || 
                !fruitCounts.Any())

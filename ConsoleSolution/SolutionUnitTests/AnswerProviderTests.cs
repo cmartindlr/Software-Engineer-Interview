@@ -224,5 +224,44 @@ namespace SolutionUnitTests
             resultingAnswer = answerProvider.ProvideAnswer(people);
             Assert.IsTrue(resultingAnswer == correctAnswer, "Incorrect return value for variation.");
         }
+
+        /// <summary>
+        /// Tests the most common eye color answer provider.
+        /// </summary>
+        [TestMethod]
+        [DataRow(null, null, null, null, null)]
+        [DataRow(null, null, null, null, "blue")]
+        [DataRow(null, null, null, "blue", "blue")]
+        [DataRow(null, null, "brown", "blue", "blue")]
+        [DataRow(null, null, "brown", "brown", "blue")]
+        [DataRow(null, null, "blue", "brown", "blue")]
+        [DataRow("blue", "green", "blue", "brown", "blue")]
+        public void TestMostCommonEyeColorAnswerProvider(string? eyeColor1, string? eyeColor2, string eyeColor3, string eyeColor4, string eyeColor5)
+        {
+            // Make the people.
+            List<RegisteredPerson> people = new List<RegisteredPerson>()
+            {
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, eyeColor1, null, null, null, null),
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, eyeColor2, null, null, null, null),
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, eyeColor3, null, null, null, null),
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, eyeColor4, null, null, null, null),
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, eyeColor5, null, null, null, null)
+            };
+
+            // Get the most common eye color.
+            string? actualEyeColor = people.Where(x => x.EyeColor != null)
+                                           .GroupBy(x => x.EyeColor)
+                                           .OrderByDescending(x => x.Count())
+                                           .Select(x => x.Key)
+                                           .FirstOrDefault();
+            string correctAnswer = actualEyeColor == null ? "{}" : "{\n  \"eyeColor\": \"" + actualEyeColor + "\"\n}";
+
+            // Get the result.
+            IAnswerProvider<RegisteredPerson> answerProvider = new MostCommenEyeColorAnswerProvider();
+            string result = answerProvider.ProvideAnswer(people);
+
+            // Compare results.
+            Assert.IsTrue(result == correctAnswer, "Incorrect most common eye color.");
+        }
     }
 }

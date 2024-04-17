@@ -29,8 +29,8 @@ namespace ConsoleSolution.Objects
         {
             // Get the person.
             RegisteredPerson? person = data.Where(x => x.IsActive == true &&
-                                                       x.RegistrationDate != null)
-                                           .OrderByDescending(x => x.RegistrationDate)
+                                                       x.RegistrationDate != null) // Ignore if not active or no date
+                                           .OrderByDescending(x => x.RegistrationDate) // Get most recent date.
                                            .FirstOrDefault();
 
             if(person == null)
