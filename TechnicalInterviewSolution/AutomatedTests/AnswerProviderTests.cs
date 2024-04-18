@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 
 namespace AutomatedTests
 {
@@ -315,7 +316,7 @@ namespace AutomatedTests
 
             // Empty list.
             people = new List<RegisteredPerson>();
-            correctAnswer = 0.00M.ToString("C");
+            correctAnswer = 0.00M.ToString("C", new CultureInfo("en-US"));
             result = answerProvider.ProvideAnswer(people);
             Assert.IsTrue(result.Answer == correctAnswer, "Incorrect answer for empty list.");
 
@@ -328,7 +329,7 @@ namespace AutomatedTests
                 new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
                 new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, null, null, null)
             };
-            correctAnswer = 0.00M.ToString("C");
+            correctAnswer = 0.00M.ToString("C", new CultureInfo("en-US"));
             result = answerProvider.ProvideAnswer(people);
             Assert.IsTrue(result.Answer == correctAnswer, "Incorrect answer for no balance.");
 
@@ -336,26 +337,26 @@ namespace AutomatedTests
             // Some balances.
             people = new List<RegisteredPerson>()
             {
-                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 20.00M.ToString("C"), null, null),
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 20.00M.ToString("C", new CultureInfo("en-US")), null, null),
                 new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
-                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 55.40M.ToString("C"), null, null),
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 55.40M.ToString("C", new CultureInfo("en-US")), null, null),
                 new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, null, null, null),
-                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 5.99M.ToString("C"), null, null)
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 5.99M.ToString("C", new CultureInfo("en-US")), null, null)
             };
-            correctAnswer = 81.39M.ToString("C");
+            correctAnswer = 81.39M.ToString("C", new CultureInfo("en-US"));
             result = answerProvider.ProvideAnswer(people);
             Assert.IsTrue(result.Answer == correctAnswer, "Incorrect answer for some balances.");
 
             // All balances.
             people = new List<RegisteredPerson>()
             {
-                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 1.00M.ToString("C"), null, null),
-                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 1.00M.ToString("C"), null, null),
-                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 1.00M.ToString("C"), null, null),
-                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 1.00M.ToString("C"), null, null),
-                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 1.00M.ToString("C"), null, null)
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 1.00M.ToString("C", new CultureInfo("en-US")), null, null),
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 1.00M.ToString("C", new CultureInfo("en-US")), null, null),
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 1.00M.ToString("C", new CultureInfo("en-US")), null, null),
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 1.00M.ToString("C", new CultureInfo("en-US")), null, null),
+                new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, 1.00M.ToString("C", new CultureInfo("en-US")), null, null)
             };
-            correctAnswer = 5.00M.ToString("C");
+            correctAnswer = 5.00M.ToString("C", new CultureInfo("en-US"));
             result = answerProvider.ProvideAnswer(people);
             Assert.IsTrue(result.Answer == correctAnswer, "Incorrect answer for all balances.");
         }

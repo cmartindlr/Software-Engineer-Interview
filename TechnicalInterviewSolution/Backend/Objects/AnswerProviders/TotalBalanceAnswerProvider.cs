@@ -1,5 +1,6 @@
 ﻿using Backend.Interfaces;
 using Backend.Models.Json;
+using System.Globalization;
 
 namespace Backend.Objects.AnswerProviders
 {
@@ -27,7 +28,7 @@ namespace Backend.Objects.AnswerProviders
         public (string Question, string Answer) ProvideAnswer(IEnumerable<RegisteredPerson> data)
         {
             // Simple sum of all fields, 0 if not present.
-            return (TotalBalanceAnswerProvider._question, (data.Any() ? data.Sum(x => x.NumericBalance ?? 0.0M) : 0.0M).ToString("C"));
+            return (TotalBalanceAnswerProvider._question, (data.Any() ? data.Sum(x => x.NumericBalance ?? 0.0M) : 0.0M).ToString("C", new CultureInfo("en-US")));
         }
     }
 }
