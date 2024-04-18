@@ -38,10 +38,10 @@ namespace Backend.Objects
         }
 
         /// <inheritdoc/>
-        public IEnumerable<string> AggregateAnswers(IEnumerable<T> data)
+        public IEnumerable<(string Question, string Answer)> AggregateAnswers(IEnumerable<T> data)
         {
             // Create a list of results the same size as the number of answers.
-            string[] results = new string[this.AnswerProviders.Count()];
+            (string Question, string Answer)[] results = new (string Question, string Answer)[this.AnswerProviders.Count()];
 
             // Check whether or not to thread.
             if(this._dataSetThreshold < data.Count())
@@ -55,7 +55,7 @@ namespace Backend.Objects
                     int i = index; // Copy current index value.
                     tasks.Add(Task.Run(() =>
                     {
-                        results[i] = answerProvider.ProvideAnswer(data) ?? "null";
+                        results[i] = answerProvider.ProvideAnswer(data);
                     }));
                     index++;
                 }
@@ -82,7 +82,7 @@ namespace Backend.Objects
                 foreach(IAnswerProvider<T> answerProvider in this.AnswerProviders)
                 {
                     // Save the task to wait on later.
-                    results[index] = answerProvider.ProvideAnswer(data) ?? "null";
+                    results[index] = answerProvider.ProvideAnswer(data);
                     index++;
                 }
 

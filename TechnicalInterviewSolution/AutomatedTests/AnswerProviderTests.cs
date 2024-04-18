@@ -37,10 +37,10 @@ namespace AutomatedTests
 
             // Run with the answer provider.
             Over50AnswerProvider ageAnswerProvider = new Over50AnswerProvider();
-            string answer = ageAnswerProvider.ProvideAnswer(people);
+            (string Question, string Answer) answer = ageAnswerProvider.ProvideAnswer(people);
 
             // Check if the answer matches the correct count.
-            Assert.IsTrue(int.Parse(answer) == result, "Count is not the correct count.");
+            Assert.IsTrue(int.Parse(answer.Answer) == result, "Count is not the correct count.");
         }
 
         /// <summary>
@@ -154,10 +154,10 @@ namespace AutomatedTests
 
                 // Get the provided answer.
                 IAnswerProvider<RegisteredPerson> answerProvider = new MostRecentStillActiveAnswerProvider();
-                string answer = answerProvider.ProvideAnswer(people);
+                (string Question, string Answer) answer = answerProvider.ProvideAnswer(people);
 
                 // Compare the results.
-                Assert.IsTrue(result == answer, "Answer provided did not match.\n" + result + "\n" + answer);
+                Assert.IsTrue(result == answer.Answer, "Answer provided did not match.\n" + result + "\n" + answer.Answer);
             }
         }
 
@@ -177,8 +177,8 @@ namespace AutomatedTests
                 new RegisteredPerson(null ,null, null, null, null, null, null, null, null, null, null, null, null, null, null)
             };
             string correctAnswer = "NULL";
-            string resultingAnswer = answerProvider.ProvideAnswer(people);
-            Assert.IsTrue(resultingAnswer == correctAnswer, "Incorrect return value for all nulls.");
+            (string Question, string Answer) resultingAnswer = answerProvider.ProvideAnswer(people);
+            Assert.IsTrue(resultingAnswer.Answer == correctAnswer, "Incorrect return value for all nulls.");
 
             // At least one null fruit.
             people = new List<RegisteredPerson>()
@@ -189,7 +189,7 @@ namespace AutomatedTests
             };
             correctAnswer = "apple: 1,\nbanana: 1";
             resultingAnswer = answerProvider.ProvideAnswer(people);
-            Assert.IsTrue(resultingAnswer == correctAnswer, "Incorrect return value for one null.");
+            Assert.IsTrue(resultingAnswer.Answer == correctAnswer, "Incorrect return value for one null.");
 
             // All same fruit.
             people = new List<RegisteredPerson>()
@@ -200,7 +200,7 @@ namespace AutomatedTests
             };
             correctAnswer = "apple: 3";
             resultingAnswer = answerProvider.ProvideAnswer(people);
-            Assert.IsTrue(resultingAnswer == correctAnswer, "Incorrect return value for all same fruit.");
+            Assert.IsTrue(resultingAnswer.Answer == correctAnswer, "Incorrect return value for all same fruit.");
 
             // All different fruits.
             people = new List<RegisteredPerson>()
@@ -211,7 +211,7 @@ namespace AutomatedTests
             };
             correctAnswer = "lemon: 1,\nlime: 1,\norange: 1";
             resultingAnswer = answerProvider.ProvideAnswer(people);
-            Assert.IsTrue(resultingAnswer == correctAnswer, "Incorrect return value for all different.");
+            Assert.IsTrue(resultingAnswer.Answer == correctAnswer, "Incorrect return value for all different.");
 
             // Variation.
             people = new List<RegisteredPerson>()
@@ -229,7 +229,7 @@ namespace AutomatedTests
             };
             correctAnswer = "apple: 3,\ncherry: 2,\nlime: 1,\nraspberry: 3,\nstrawberry: 1";
             resultingAnswer = answerProvider.ProvideAnswer(people);
-            Assert.IsTrue(resultingAnswer == correctAnswer, "Incorrect return value for variation.");
+            Assert.IsTrue(resultingAnswer.Answer == correctAnswer, "Incorrect return value for variation.");
         }
 
         /// <summary>
@@ -296,10 +296,10 @@ namespace AutomatedTests
 
             // Get the result.
             IAnswerProvider<RegisteredPerson> answerProvider = new MostCommenEyeColorAnswerProvider();
-            string result = answerProvider.ProvideAnswer(people);
+            (string Question, string Answer) result = answerProvider.ProvideAnswer(people);
 
             // Compare results.
-            Assert.IsTrue(result == correctAnswer, "Incorrect most common eye color.");
+            Assert.IsTrue(result.Answer == correctAnswer, "Incorrect most common eye color.");
         }
 
         /// <summary>
@@ -310,14 +310,14 @@ namespace AutomatedTests
         {
             IAnswerProvider<RegisteredPerson> answerProvider = new TotalBalanceAnswerProvider();
             string correctAnswer;
-            string result;
+            (string Question, string Answer) result;
             List<RegisteredPerson> people;
 
             // Empty list.
             people = new List<RegisteredPerson>();
             correctAnswer = 0.00M.ToString("C");
             result = answerProvider.ProvideAnswer(people);
-            Assert.IsTrue(result == correctAnswer, "Incorrect answer for empty list.");
+            Assert.IsTrue(result.Answer == correctAnswer, "Incorrect answer for empty list.");
 
             // No balances.
             people = new List<RegisteredPerson>()
@@ -330,7 +330,7 @@ namespace AutomatedTests
             };
             correctAnswer = 0.00M.ToString("C");
             result = answerProvider.ProvideAnswer(people);
-            Assert.IsTrue(result == correctAnswer, "Incorrect answer for no balance.");
+            Assert.IsTrue(result.Answer == correctAnswer, "Incorrect answer for no balance.");
 
 
             // Some balances.
@@ -344,7 +344,7 @@ namespace AutomatedTests
             };
             correctAnswer = 81.39M.ToString("C");
             result = answerProvider.ProvideAnswer(people);
-            Assert.IsTrue(result == correctAnswer, "Incorrect answer for some balances.");
+            Assert.IsTrue(result.Answer == correctAnswer, "Incorrect answer for some balances.");
 
             // All balances.
             people = new List<RegisteredPerson>()
@@ -357,7 +357,7 @@ namespace AutomatedTests
             };
             correctAnswer = 5.00M.ToString("C");
             result = answerProvider.ProvideAnswer(people);
-            Assert.IsTrue(result == correctAnswer, "Incorrect answer for all balances.");
+            Assert.IsTrue(result.Answer == correctAnswer, "Incorrect answer for all balances.");
         }
 
         /// <summary>
@@ -381,8 +381,8 @@ namespace AutomatedTests
             };
             string correctAnswer = namedPerson.Name.FormattedName;
             IAnswerProvider<RegisteredPerson> answerProvider = new FullNameAnswerProvider();
-            string result = answerProvider.ProvideAnswer(people);
-            Assert.IsTrue(result == correctAnswer, "Incorrect when only person with correct ID is in list.");
+            (string Question, string Answer) result = answerProvider.ProvideAnswer(people);
+            Assert.IsTrue(result.Answer == correctAnswer, "Incorrect when only person with correct ID is in list.");
 
             // ID is present for multiple people in the list.
             people = new List<RegisteredPerson>()
@@ -392,7 +392,7 @@ namespace AutomatedTests
             };
             correctAnswer = namedPerson.Name.FormattedName + ",\n" + namedPerson.Name.FormattedName;
             result = answerProvider.ProvideAnswer(people);
-            Assert.IsTrue(result == correctAnswer, $"Incorrect when multiple people with correct ID are in list.\n{correctAnswer}\n{result}");
+            Assert.IsTrue(result.Answer == correctAnswer, $"Incorrect when multiple people with correct ID are in list.\n{correctAnswer}\n{result}");
 
             // ID is present and several people in list.
             people = new List<RegisteredPerson>()
@@ -404,7 +404,7 @@ namespace AutomatedTests
             };
             correctAnswer = namedPerson.Name.FormattedName;
             result = answerProvider.ProvideAnswer(people);
-            Assert.IsTrue(result == correctAnswer, "Incorrect when person with correct ID is in list with others.");
+            Assert.IsTrue(result.Answer == correctAnswer, "Incorrect when person with correct ID is in list with others.");
 
             // ID is present and no name.
             people = new List<RegisteredPerson>()
@@ -416,7 +416,7 @@ namespace AutomatedTests
             };
             correctAnswer = "NULL";
             result = answerProvider.ProvideAnswer(people);
-            Assert.IsTrue(result == correctAnswer, "Incorrect when person with correct ID is in list without name.");
+            Assert.IsTrue(result.Answer == correctAnswer, "Incorrect when person with correct ID is in list without name.");
 
             // ID is not present, but list in not empty.
             people = new List<RegisteredPerson>()
@@ -427,13 +427,13 @@ namespace AutomatedTests
             };
             correctAnswer = "NULL";
             result = answerProvider.ProvideAnswer(people);
-            Assert.IsTrue(result == correctAnswer, "Incorrect when person with correct ID is not in list.");
+            Assert.IsTrue(result.Answer == correctAnswer, "Incorrect when person with correct ID is not in list.");
 
             // ID is not present and list is empty.
             people = new List<RegisteredPerson>();
             correctAnswer = "NULL";
             result = answerProvider.ProvideAnswer(people);
-            Assert.IsTrue(result == correctAnswer, "Incorrect when no one is in list.");
+            Assert.IsTrue(result.Answer == correctAnswer, "Incorrect when no one is in list.");
         }
     }
 }

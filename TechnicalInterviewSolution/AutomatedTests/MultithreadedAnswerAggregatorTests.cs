@@ -36,11 +36,11 @@ namespace AutomatedTests
         public void TestAnswerAggregator(int threshold, int size) 
         {
             // Set up mocks.
-            string result1 = "Mock1";
-            string result2 = "Mock2";
-            string result3 = "Mock3";
-            string result4 = "Mock4";
-            string result5 = "Mock5";
+            (string Question, string Answer) result1 = ("Question1", "Mock1");
+            (string Question, string Answer) result2 = ("Question2", "Mock2");
+            (string Question, string Answer) result3 = ("Question3", "Mock3");
+            (string Question, string Answer) result4 = ("Question4", "Mock4");
+            (string Question, string Answer) result5 = ("Question5", "Mock5");
             Mock<IAnswerProvider<int>> mock1 = new Mock<IAnswerProvider<int>>();
             mock1.Setup(x => x.ProvideAnswer(It.IsAny<IEnumerable<int>>())).Returns(result1);
             Mock<IAnswerProvider<int>> mock2 = new Mock<IAnswerProvider<int>>();
@@ -67,7 +67,7 @@ namespace AutomatedTests
             }
 
             // Run function.
-            IEnumerable<string> result = answerAggregator.AggregateAnswers(data);
+            IEnumerable<(string Question, string Answer)> result = answerAggregator.AggregateAnswers(data);
 
             // Test calls were made.
             mock1.Verify(x => x.ProvideAnswer(data), "First answer provider not called to provide answer.");

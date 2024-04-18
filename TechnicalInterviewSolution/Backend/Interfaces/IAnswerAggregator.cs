@@ -26,6 +26,6 @@ namespace Backend.Interfaces
         /// <returns>
         /// A list with the set of answers.
         /// </returns>
-        IEnumerable<string> AggregateAnswers(IEnumerable<T> data);
+        IEnumerable<(string Question, string Answer)> AggregateAnswers(IEnumerable<T> data);
     }
 }

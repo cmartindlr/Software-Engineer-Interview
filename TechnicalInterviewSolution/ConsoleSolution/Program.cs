@@ -12,7 +12,7 @@ namespace ConsoleSolution
     internal class Program
     {
         /// <summary>
-        /// THe name of the file to read.
+        /// The name of the file to read.
         /// </summary>
         static string _fileName = "data.json";
 
@@ -46,14 +46,14 @@ namespace ConsoleSolution
 
             // Get the answer for each question.
             IAnswerAggregator<RegisteredPerson> answerAggregator = new MultithreadedAnswerAggregator<RegisteredPerson>(Program._answerProviders);
-            List<string> results = answerAggregator.AggregateAnswers(people).ToList();
+            List<(string Question, string Answer)> results = answerAggregator.AggregateAnswers(people).ToList();
 
             // Print off each answer. Create a record of the answer for later.
             int questionNumber = 1;
-            foreach(string result in results)
+            foreach((string Question, string Answer) result in results)
             {
                 // Print out the result.
-                Console.Write(questionNumber + ". " + Program._answerProviders[questionNumber - 1].Question + "\n" + result + "\n\n");
+                Console.Write(questionNumber + ". " + result.Question + "\n" + result.Answer + "\n\n");
                 questionNumber++;
             }
 
@@ -63,8 +63,8 @@ namespace ConsoleSolution
             {
                 AnswerDate = DateTime.Now,
                 FileName = "data.json",
-                Question = Program._answerProviders[results.IndexOf(x)].Question,
-                Answer = x
+                Question = x.Question,
+                Answer = x.Answer
             }));
         }
     }

@@ -14,8 +14,10 @@ namespace Backend.Objects.AnswerProviders
     {
         // This follows the Liskov substitution principle of SOLID by allowing this provider to be used wherever an answer provider is desired.
 
-        /// <inheritdoc/>
-        public string Question { get; } = "Who is last individual that registered who is still active?";
+        /// <summary>
+        /// The question this class answers.
+        /// </summary>
+        private static string _question = "Who is last individual that registered who is still active?";
 
         /// <summary>
         /// Gets the most recently active person registered as a JSON.
@@ -26,7 +28,7 @@ namespace Backend.Objects.AnswerProviders
         /// <returns>
         /// The JSON representing the most recently registered active person.
         /// </returns>
-        public string ProvideAnswer(IEnumerable<RegisteredPerson> data)
+        public (string Question, string Answer) ProvideAnswer(IEnumerable<RegisteredPerson> data)
         {
             // Get the person.
             IEnumerable<IGrouping<DateTime, RegisteredPerson>> dateGroups =
@@ -39,7 +41,7 @@ namespace Backend.Objects.AnswerProviders
                !dateGroups.Any())
             {
                 // If no answer, provide empty JSON.
-                return "{}";
+                return (MostRecentStillActiveAnswerProvider._question, "{}");
             }
             else
             {
@@ -49,7 +51,7 @@ namespace Backend.Objects.AnswerProviders
                    !people.Any())
                 {
                     // If no answer, provide empty JSON.
-                    return "{}";
+                    return (MostRecentStillActiveAnswerProvider._question, "{}");
                 }
                 else if (people.Count() > 1)
                 {
@@ -62,14 +64,14 @@ namespace Backend.Objects.AnswerProviders
                     }
                     matchingPeople.Remove(matchingPeople.Length - 1, 1);
                     matchingPeople.Append("\n]");
-                    return matchingPeople.ToString();
+                    return (MostRecentStillActiveAnswerProvider._question, matchingPeople.ToString());
                 }
                 else
                 {
                     RegisteredPerson person = people.First();
 
                     // No specific ask for a certain field, just the person, so return whole person.
-                    return JsonConvert.SerializeObject(person, Formatting.Indented);
+                    return (MostRecentStillActiveAnswerProvider._question, JsonConvert.SerializeObject(person, Formatting.Indented));
                 }
             }
         }

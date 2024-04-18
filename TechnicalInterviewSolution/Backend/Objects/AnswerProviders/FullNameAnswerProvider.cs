@@ -11,8 +11,10 @@ namespace Backend.Objects.AnswerProviders
     {
         // This follows the Liskov substitution principle of SOLID by allowing this provider to be used wherever an answer provider is desired.
 
-        /// <inheritdoc/>
-        public string Question => "What is the full name of the individual with the id of 5aabbca3e58dc67745d720b1 in the format of lastname, firstname?";
+        /// <summary>
+        /// The question this class answers.
+        /// </summary>
+        private static string _question => "What is the full name of the individual with the id of 5aabbca3e58dc67745d720b1 in the format of lastname, firstname?";
 
         /// <summary>
         /// Gets the name of the person with the given ID in a JSON.
@@ -23,7 +25,7 @@ namespace Backend.Objects.AnswerProviders
         /// <returns>
         /// The name of the person with the given ID.
         /// </returns>
-        public string ProvideAnswer(IEnumerable<RegisteredPerson> data)
+        public (string Question, string Answer) ProvideAnswer(IEnumerable<RegisteredPerson> data)
         {
             // Find the person by ID.
             IEnumerable<RegisteredPerson> people = data.Where(x => x.ID == "5aabbca3e58dc67745d720b1");
@@ -33,7 +35,7 @@ namespace Backend.Objects.AnswerProviders
                people.All(x => x.Name == null))
             {
                 // Return empty JSON if null.
-                return "NULL";
+                return (FullNameAnswerProvider._question, "NULL");
             }
             else if (people.Count() > 1)
             {
@@ -44,13 +46,13 @@ namespace Backend.Objects.AnswerProviders
                     matchingPeople.Append($"{person.Name.FormattedName},\n");
                 }
                 matchingPeople.Remove(matchingPeople.Length - 2, 2);
-                return matchingPeople.ToString();
+                return (FullNameAnswerProvider._question, matchingPeople.ToString());
             }
             else
             {
                 // Return the only person.
                 RegisteredPerson person = people.First();
-                return person.Name.FormattedName;
+                return (FullNameAnswerProvider._question, person.Name.FormattedName);
             }
         }
     }

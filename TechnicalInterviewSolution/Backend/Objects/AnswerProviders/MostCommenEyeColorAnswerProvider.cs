@@ -11,8 +11,10 @@ namespace Backend.Objects.AnswerProviders
     {
         // This follows the Liskov substitution principle of SOLID by allowing this provider to be used wherever an answer provider is desired.
 
-        /// <inheritdoc/>
-        public string Question => "What is the most common eye color?";
+        /// <summary>
+        /// The question this class answers.
+        /// </summary>
+        private static string _question => "What is the most common eye color?";
 
         /// <summary>
         /// Gets the answer to the most common eye color as a JSON.
@@ -23,7 +25,7 @@ namespace Backend.Objects.AnswerProviders
         /// <returns>
         /// A JSON containing a field indicating the most common eye color.
         /// </returns>
-        public string ProvideAnswer(IEnumerable<RegisteredPerson> data)
+        public (string Question, string Answer) ProvideAnswer(IEnumerable<RegisteredPerson> data)
         {
             IEnumerable<(string EyeColor, int Count)> eyeColorCounts =
                                                        data.Where(x => x.EyeColor != null) // Filter out any with no eye color.
@@ -36,7 +38,7 @@ namespace Backend.Objects.AnswerProviders
                !eyeColorCounts.Any())
             {
                 // Return empty JSON if null.
-                return "NULL";
+                return (MostCommenEyeColorAnswerProvider._question, "NULL");
             }
             else
             {
@@ -47,7 +49,7 @@ namespace Backend.Objects.AnswerProviders
                    !mostCommonEyeColors.Any())
                 {
                     // Return empty JSON if null.
-                    return "NULL";
+                    return (MostCommenEyeColorAnswerProvider._question, "NULL");
                 }
                 else if (mostCommonEyeColors.Count() > 1)
                 {
@@ -58,13 +60,13 @@ namespace Backend.Objects.AnswerProviders
                         matchingPeople.Append($"{eyeColor},\n");
                     }
                     matchingPeople.Remove(matchingPeople.Length - 2, 2);
-                    return matchingPeople.ToString();
+                    return (MostCommenEyeColorAnswerProvider._question, matchingPeople.ToString());
                 }
                 else
                 {
                     // Return the only value.
                     string eyeColor = mostCommonEyeColors.First();
-                    return eyeColor;
+                    return (MostCommenEyeColorAnswerProvider._question, eyeColor);
                 }
             }
         }

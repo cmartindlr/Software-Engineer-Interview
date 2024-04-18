@@ -11,19 +11,14 @@
         // Simple interface satisfies interface segregation principle in SOLID.
 
         /// <summary>
-        /// The question that this answer provider can answer.
-        /// </summary>
-        string Question { get; }
-
-        /// <summary>
         /// Provides the answer about the data.
         /// </summary>
         /// <param name="data">
         /// The data to get answers out of.
         /// </param>
         /// <returns>
-        /// The answer, formatted as JSON if complex.
+        /// The answer, formatted as JSON if complex, along with the question it answers.
         /// </returns>
-        string ProvideAnswer(IEnumerable<T> data); // Uses dependency inversion by depending on an abstraction (IEnumberable).
+        (string Question, string Answer) ProvideAnswer(IEnumerable<T> data); // Uses dependency inversion by depending on an abstraction (IEnumberable).
     }
 }

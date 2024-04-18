@@ -11,8 +11,10 @@ namespace Backend.Objects.AnswerProviders
     {
         // This follows the Liskov substitution principle of SOLID by allowing this provider to be used wherever an answer provider is desired.
 
-        /// <inheritdoc/>
-        public string Question { get; } = "What are the counts of each favorite fruit?";
+        /// <summary>
+        /// The question this class answers.
+        /// </summary>
+        private static string _question { get; } = "What are the counts of each favorite fruit?";
 
         /// <summary>
         /// Gets every combination of fruits and counts.
@@ -23,7 +25,7 @@ namespace Backend.Objects.AnswerProviders
         /// <returns>
         /// Every combination of fruits and counts in alphabetical order as a JSON.
         /// </returns>
-        public string ProvideAnswer(IEnumerable<RegisteredPerson> data)
+        public (string Question, string Answer) ProvideAnswer(IEnumerable<RegisteredPerson> data)
         {
             // Get the fruit pair.
             IEnumerable<(string Fruit, int Count)> fruitCounts = data.Where(x => x.FavoriteFruit != null) // Ignore unspecified favorites.
@@ -34,7 +36,7 @@ namespace Backend.Objects.AnswerProviders
                !fruitCounts.Any())
             {
                 // If no answer, provide empty JSON.
-                return "NULL";
+                return (FavoriteFruitsCountsAnswerProvider._question, "NULL");
             }
             else
             {
@@ -46,7 +48,7 @@ namespace Backend.Objects.AnswerProviders
                 }
                 result.Remove(result.Length - 2, 2); // Remove last comma and newline.
 
-                return result.ToString();
+                return (FavoriteFruitsCountsAnswerProvider._question, result.ToString());
             }
         }
     }
