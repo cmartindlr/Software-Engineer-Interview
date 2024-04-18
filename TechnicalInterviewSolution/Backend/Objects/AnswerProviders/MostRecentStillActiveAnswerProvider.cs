@@ -41,7 +41,7 @@ namespace Backend.Objects.AnswerProviders
                !dateGroups.Any())
             {
                 // If no answer, provide empty JSON.
-                return (MostRecentStillActiveAnswerProvider._question, "{}");
+                return (MostRecentStillActiveAnswerProvider._question, "NULL");
             }
             else
             {
@@ -51,19 +51,17 @@ namespace Backend.Objects.AnswerProviders
                    !people.Any())
                 {
                     // If no answer, provide empty JSON.
-                    return (MostRecentStillActiveAnswerProvider._question, "{}");
+                    return (MostRecentStillActiveAnswerProvider._question, "NULL");
                 }
                 else if (people.Count() > 1)
                 {
                     // Build a list of answers.
                     StringBuilder matchingPeople = new StringBuilder();
-                    matchingPeople.Append("[");
                     foreach (RegisteredPerson person in people.OrderBy(x => x.Name?.FormattedName ?? ""))
                     {
-                        matchingPeople.Append($"\n  {JsonConvert.SerializeObject(person, Formatting.Indented).Replace("\n", "\n  ")},");
+                        matchingPeople.Append($"{person.Name?.FormattedName ?? "NULL"},\n");
                     }
-                    matchingPeople.Remove(matchingPeople.Length - 1, 1);
-                    matchingPeople.Append("\n]");
+                    matchingPeople.Remove(matchingPeople.Length - 2, 2);
                     return (MostRecentStillActiveAnswerProvider._question, matchingPeople.ToString());
                 }
                 else
@@ -71,7 +69,7 @@ namespace Backend.Objects.AnswerProviders
                     RegisteredPerson person = people.First();
 
                     // No specific ask for a certain field, just the person, so return whole person.
-                    return (MostRecentStillActiveAnswerProvider._question, JsonConvert.SerializeObject(person, Formatting.Indented));
+                    return (MostRecentStillActiveAnswerProvider._question, person.Name?.FormattedName ?? "NULL");
                 }
             }
         }

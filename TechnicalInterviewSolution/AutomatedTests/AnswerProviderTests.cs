@@ -133,24 +133,22 @@ namespace AutomatedTests
                 if(persons == null || 
                    !persons.Any()) 
                 {
-                    result = "{}";
+                    result = "NULL";
                 }
                 else if(persons.Count() > 1)
                 {
                     // Build a list of answers.
                     StringBuilder matchingPeople = new StringBuilder();
-                    matchingPeople.Append("[");
                     foreach(RegisteredPerson person in persons.OrderBy(x => x.Name?.FormattedName ?? ""))
                     {
-                        matchingPeople.Append($"\n  {JsonConvert.SerializeObject(person, Formatting.Indented).Replace("\n", "\n  ")},");
+                        matchingPeople.Append($"{person.Name?.FormattedName ?? "NULL"},\n");
                     }
-                    matchingPeople.Remove(matchingPeople.Length - 1, 1);
-                    matchingPeople.Append("\n]");
+                    matchingPeople.Remove(matchingPeople.Length - 2, 2);
                     result = matchingPeople.ToString();
                 }
                 else 
                 {
-                    result = JsonConvert.SerializeObject(persons.First(), Formatting.Indented);
+                    result = persons.First().Name?.FormattedName ?? "NULL";
                 }
 
                 // Get the provided answer.
