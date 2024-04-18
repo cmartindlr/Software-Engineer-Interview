@@ -1,0 +1,90 @@
+﻿@using Backend.Interfaces
+@using Backend.Models.Json
+@using Backend.Models.Sql
+@using System.Web
+@using System.Text.RegularExpressions
+
+@* Credit newtonsoft. https://www.newtonsoft.com/json *@
+@using Newtonsoft.Json
+
+@inject IAnswerAggregator<RegisteredPerson> _answerAggregator
+@inject IAnswerRecordDataManager _answerRecordDataManager
+
+@page "/"
+
+<div>
+    <!-- Page heading -->
+    <div class="page-header header">
+        <h1 class="text-center">Questions & Answers</h1>
+    </div>
+
+    <!-- Questions and Answers -->
+    @foreach((string Question, string Answer) answer in this._answers)
+    {
+        <div class="card container mx-auto p-2 my-2">
+            <h3 class="text-center card-header">@answer.Question</h3>
+            <br/>
+            <div class="card-body align-self-center">
+                @* https://stackoverflow.com/questions/64157834/how-can-i-have-new-line-in-blazor *@
+                <pre class="text-left">@((MarkupString)Regex.Replace(HttpUtility.HtmlEncode(answer.Answer), "\r?\n|\r", "<br />"))</pre>
+            </div>
+        </div>
+    }
+</div>
+
+@code
+{
+    /// <summary>
+    /// The name of the file to read.
+    /// </summary>
+    private static string _fileName = "data.json";
+
+
+    private List<(string Question, string Answer)> _answers;
+
+    /// <summary>
+    /// Creates a base page.
+    /// </summary>
+    public Index()
+    {
+        this._answers = new List<(string Question, string Answer)>();
+    }
+
+    /// <inheritdoc/>
+    protected override void OnInitialized()
+    {
+        this.ReloadData();
+        base.OnInitialized();
+    }
+
+    /// <summary>
+    /// Reloads the data into the view.
+    /// </summary>
+    private void ReloadData()
+    {
+        // The collection of people.
+        List<RegisteredPerson> people;
+
+        // Deserialize the entire json.
+        using(JsonReader reader = new JsonTextReader(File.OpenText(Index._fileName)))
+        {
+            JsonSerializer deserializer = new JsonSerializer();
+            people = deserializer.Deserialize<List<RegisteredPerson>>(reader) ?? new List<RegisteredPerson>();
+        }
+
+        // Get the answer for each question.
+        this._answers = this._answerAggregator.AggregateAnswers(people).ToList();
+
+        // Save the answers.
+        this._answerRecordDataManager.Save(this._answers.Select(x => new AnswerRecord()
+        {
+            AnswerDate = DateTime.Now,
+            FileName = Index._fileName,
+            Question = x.Question,
+            Answer = x.Answer
+        }));
+
+        // Notify that page needs updated.
+        this.StateHasChanged();
+    }
+}
