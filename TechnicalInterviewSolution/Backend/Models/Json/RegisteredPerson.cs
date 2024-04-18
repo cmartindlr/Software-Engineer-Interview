@@ -1,4 +1,5 @@
 ﻿// Credit Newtonsoft. https://www.newtonsoft.com/json
+using Backend.Objects;
 using Newtonsoft.Json;
 using System.Globalization;
 
@@ -207,6 +208,71 @@ namespace Backend.Models.Json
             this.Balance = balance;
             this.IsActive = isActive;
             this.ID = ID;
+
+            // Log any null fields since this is not the expected result and indicates a
+            // problem with the JSON under normal circumstances. Assuming the JSON was
+            // transmitted via an API, this would indicate a problem with that API, for
+            // instance.
+            if(this.FavoriteFruit == null) 
+            {
+                FileLogger.Log("Favorite fruit missing on JSON.");
+            }
+            if(this.Greeting == null)
+            {
+                FileLogger.Log("Greeting missing on JSON.");
+            }
+            if(this.Longitude == null)
+            {
+                FileLogger.Log("Longitude missing on JSON.");
+            }
+            if(this.Latitude == null)
+            {
+                FileLogger.Log("Latitude missing on JSON.");
+            }
+            if(this.RegistrationDate == null)
+            {
+                FileLogger.Log("Registration date missing on JSON.");
+            }
+            if(this.Address == null)
+            {
+                FileLogger.Log("Address missing on JSON.");
+            }
+            if(this.PhoneNumber == null)
+            {
+                FileLogger.Log("Phone Number missing on JSON.");
+            }
+            if(this.EmailAddress == null)
+            {
+                FileLogger.Log("Email missing on JSON.");
+            }
+            if(this.Company == null)
+            {
+                FileLogger.Log("Company missing on JSON.");
+            }
+            if(this.Name == null)
+            {
+                FileLogger.Log("Name missing on JSON.");
+            }
+            if(this.EyeColor == null)
+            {
+                FileLogger.Log("Eye color missing on JSON.");
+            }
+            if(this.Age == null)
+            {
+                FileLogger.Log("Age missing on JSON.");
+            }
+            if(this.Balance == null)
+            {
+                FileLogger.Log("Balance missing on JSON.");
+            }
+            if(this.IsActive == null)
+            {
+                FileLogger.Log("Is active field missing on JSON.");
+            }
+            if(this.ID == null)
+            {
+                FileLogger.Log("ID missing on JSON.");
+            }
         }
     }
 }

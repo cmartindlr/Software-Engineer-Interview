@@ -79,7 +79,7 @@
         this._answerRecordDataManager.Save(this._answers.Select(x => new AnswerRecord()
         {
             AnswerDate = DateTime.Now,
-            FileName = "data.json",
+            FileName = Index._fileName,
             Question = x.Question,
             Answer = x.Answer
         }));

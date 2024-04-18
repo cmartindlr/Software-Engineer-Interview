@@ -1,5 +1,8 @@
 ﻿// Credit Newtonsoft.
+using Backend.Objects;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace Backend.Models.Json
 {
@@ -59,6 +62,19 @@ namespace Backend.Models.Json
         {
             this.LastName = lastName;
             this.FirstName = firstName;
+
+            // Log any null fields since this is not the expected result and indicates a
+            // problem with the JSON under normal circumstances. Assuming the JSON was
+            // transmitted via an API, this would indicate a problem with that API, for
+            // instance.
+            if(this.LastName == null)
+            {
+                FileLogger.Log("Last name missing on JSON.");
+            }
+            if(this.FirstName == null)
+            {
+                FileLogger.Log("First name missing on JSON.");
+            }
         }
     }
 }

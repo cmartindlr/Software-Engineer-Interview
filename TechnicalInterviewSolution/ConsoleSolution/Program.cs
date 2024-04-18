@@ -62,7 +62,7 @@ namespace ConsoleSolution
             answerRecordDataManager.Save(results.Select(x => new AnswerRecord()
             {
                 AnswerDate = DateTime.Now,
-                FileName = "data.json",
+                FileName = Program._fileName,
                 Question = x.Question,
                 Answer = x.Answer
             }));
