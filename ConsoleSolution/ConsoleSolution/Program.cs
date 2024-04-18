@@ -6,12 +6,16 @@ using ConsoleSolution.Interfaces;
 using ConsoleSolution.Objects.AnswerProviders;
 using ConsoleSolution.Objects;
 using ConsoleSolution.Models.Sql;
-using Microsoft.EntityFrameworkCore;
 
 namespace ConsoleSolution
 {
     internal class Program
     {
+        /// <summary>
+        /// THe name of the file to read.
+        /// </summary>
+        static string _fileName = "data.json";
+
         /// <summary>
         /// The providers of answers.
         /// </summary>
@@ -34,7 +38,7 @@ namespace ConsoleSolution
             List<RegisteredPerson> people;
 
             // Deserialize the entire json.
-            using(JsonReader reader = new JsonTextReader(File.OpenText("data.json")))
+            using(JsonReader reader = new JsonTextReader(File.OpenText(Program._fileName)))
             {
                 JsonSerializer deserializer = new JsonSerializer();
                 people = deserializer.Deserialize<List<RegisteredPerson>>(reader) ?? new List<RegisteredPerson>();
@@ -42,29 +46,26 @@ namespace ConsoleSolution
 
             // Get the answer for each question.
             IAnswerAggregator<RegisteredPerson> answerAggregator = new MultithreadedAnswerAggregator<RegisteredPerson>(Program._answerProviders);
-            int questionNumber = 1;
             List<string> results = answerAggregator.AggregateAnswers(people).ToList();
-            using(AnswerContext database = new AnswerContext())
+
+            // Print off each answer. Create a record of the answer for later.
+            int questionNumber = 1;
+            foreach(string result in results) 
             {
-                foreach(string result in results) 
-                {
-                    // Add the result to save.
-                    database.AnswerRecords.Add(new AnswerRecord() 
-                    { 
-                        AnswerDate = DateTime.Now,
-                        FileName = "data.json",
-                        Question = Program._answerProviders[questionNumber - 1].Question,
-                        Answer = result
-                    });
-
-                    // Print out the result.
-                    Console.Write(questionNumber + ". " + Program._answerProviders[questionNumber - 1].Question + "\n" + result + "\n\n");
-                    questionNumber++;
-                }
-
-                // Save results.
-                database.SaveChanges();
+                // Print out the result.
+                Console.Write(questionNumber + ". " + Program._answerProviders[questionNumber - 1].Question + "\n" + result + "\n\n");
+                questionNumber++;
             }
+
+            // Save the answers.
+            IAnswerRecordDataManager answerRecordDataManager = new AnswerRecordDataManager(new AnswerContextFactory());
+            answerRecordDataManager.Save(results.Select(x => new AnswerRecord()
+            {
+                AnswerDate = DateTime.Now,
+                FileName = "data.json",
+                Question = Program._answerProviders[results.IndexOf(x)].Question,
+                Answer = x
+            }));
         }
     }
 }

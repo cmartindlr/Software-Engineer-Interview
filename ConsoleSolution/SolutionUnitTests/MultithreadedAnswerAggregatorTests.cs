@@ -1,5 +1,4 @@
-﻿// Credit Moq. https://github.com/devlooped/moq
-using Moq;
+﻿
 
 namespace SolutionUnitTests
 {
