@@ -2,24 +2,21 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-public class Program
+class Program
 {
     static void Main()
     {
-        Console.WriteLine("Starting...");
 
-        // Beware of System.IO.FileNotFoundException
+        // Deserialize json into an array of Individual objects
         string path = @"../data.json";
-
         string jsonString = File.ReadAllText(path);
-
         Individual[]? results = JsonSerializer.Deserialize<Individual[]>(jsonString);
-
         if (results == null) {
             Console.WriteLine("JSON could not be serialized.");
             return;
         }
         
+        // QUESTION 1
         // What is the count of individuals over the age of 50?
         int countOfIndividualsOver50 = 0;
         foreach (Individual individual in results) {
@@ -31,7 +28,8 @@ public class Program
         Console.WriteLine(countOfIndividualsOver50);
         Console.WriteLine();
 
-        // Who is last individual that registered who is still active?
+        // QUESTION 2
+        // Who is last individual (most recent) that registered who is still active?
         DateTime lastRegistrationTimeOfActiveIndividual = DateTime.MinValue;
         Individual? lastRegisteredActiveIndividual = null;
         foreach (Individual individual in results) {
@@ -49,9 +47,9 @@ public class Program
         }
         Console.WriteLine();
 
+        // QUESTION 3
         // What are the counts of each favorite fruit?
         Dictionary<string, int> fruitCounts = [];
-        // 
         foreach (Individual individual in results) {
             string currentFruit = individual.FavoriteFruit;
             bool keyExists = fruitCounts.TryGetValue(currentFruit, out int currentFruitCount);
@@ -68,9 +66,10 @@ public class Program
         }
         Console.WriteLine();
 
+        // QUESTION 4
         // What is the most common eye color?
         Dictionary<string, int> eyeColorCounts = [];
-        // 
+        // Get counts of each eye color:
         foreach (Individual individual in results) {
             string currentColor = individual.EyeColor;
             bool keyExists = eyeColorCounts.TryGetValue(currentColor, out int currentColorCount);
@@ -81,7 +80,7 @@ public class Program
                 eyeColorCounts.Add(currentColor, 1);
             }
         }
-        // 
+        // Find eye color with highest count:
         string mostCommonColor = "";
         int mostCommonColorCount = 0;
         foreach (var kvp in eyeColorCounts) {
@@ -95,7 +94,6 @@ public class Program
                 mostCommonColorCount = kvp.Value;
             }
         }
-        // 
         Console.WriteLine("What is the most common eye color?");
         if (mostCommonColor == "") {
             Console.WriteLine("No common colors found.");
@@ -103,6 +101,7 @@ public class Program
         Console.WriteLine(mostCommonColor);
         Console.WriteLine();
 
+        // QUESTION 5
         // What is the total balance of all individuals combined?
         decimal currentSum = 0;
         foreach (Individual individual in results) {
@@ -112,6 +111,7 @@ public class Program
         Console.WriteLine("$"+currentSum);
         Console.WriteLine();
 
+        // QUESTION 6
         // What is the full name of the individual with the id of 5aabbca3e58dc67745d720b1 in the format of lastname, firstname?
         string idToFind = "5aabbca3e58dc67745d720b1";
         string? fullName = null;
@@ -133,7 +133,8 @@ public class Program
     }
 }
 
-public class Individual(string favoriteFruit, string greeting, string longitude, string latitude,
+// Represents an Individual with properties defined by ../data.json
+class Individual(string favoriteFruit, string greeting, string longitude, string latitude,
     string registered, string address, string phone, string email, string company, NameObj name,
     string eyeColor, int age, string balance, bool isActive, string id)
 {
@@ -182,6 +183,7 @@ public class Individual(string favoriteFruit, string greeting, string longitude,
     [JsonPropertyName("id")]
     public string Id { get; set; } = id;
 
+    // Print all properties for the Individual on separate lines 
     public void PrintInfoForAnIndividual() {
         Console.WriteLine(this.FavoriteFruit);
         Console.WriteLine(this.Greeting);
@@ -204,6 +206,7 @@ public class Individual(string favoriteFruit, string greeting, string longitude,
         return;
     }
 
+    // Get the Individual's balance in a numeric form that can be used for computation
     // "$1,475.79" would return 1475.79
     public decimal GetNumericBalance() {
         // Remove the dollar sign and comma
@@ -216,7 +219,8 @@ public class Individual(string favoriteFruit, string greeting, string longitude,
     }
 }
 
-public class NameObj(string first, string last)
+// Class that makes up an Individual's full name
+class NameObj(string first, string last)
 {
     [JsonPropertyName("first")]
     public string First { get; set; } = first;
