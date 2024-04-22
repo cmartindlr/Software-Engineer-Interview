@@ -1,0 +1,15 @@
+/Users/MaxDeval/Desktop/Git/Software-Engineer-Interview/ConsoleApp/bin/Release/net8.0/ConsoleApp
+/Users/MaxDeval/Desktop/Git/Software-Engineer-Interview/ConsoleApp/bin/Release/net8.0/ConsoleApp.deps.json
+/Users/MaxDeval/Desktop/Git/Software-Engineer-Interview/ConsoleApp/bin/Release/net8.0/ConsoleApp.runtimeconfig.json
+/Users/MaxDeval/Desktop/Git/Software-Engineer-Interview/ConsoleApp/bin/Release/net8.0/ConsoleApp.dll
+/Users/MaxDeval/Desktop/Git/Software-Engineer-Interview/ConsoleApp/bin/Release/net8.0/ConsoleApp.pdb
+/Users/MaxDeval/Desktop/Git/Software-Engineer-Interview/ConsoleApp/obj/Release/net8.0/ConsoleApp.GeneratedMSBuildEditorConfig.editorconfig
+/Users/MaxDeval/Desktop/Git/Software-Engineer-Interview/ConsoleApp/obj/Release/net8.0/ConsoleApp.AssemblyInfoInputs.cache
+/Users/MaxDeval/Desktop/Git/Software-Engineer-Interview/ConsoleApp/obj/Release/net8.0/ConsoleApp.AssemblyInfo.cs
+/Users/MaxDeval/Desktop/Git/Software-Engineer-Interview/ConsoleApp/obj/Release/net8.0/ConsoleApp.csproj.CoreCompileInputs.cache
+/Users/MaxDeval/Desktop/Git/Software-Engineer-Interview/ConsoleApp/obj/Release/net8.0/ConsoleApp.sourcelink.json
+/Users/MaxDeval/Desktop/Git/Software-Engineer-Interview/ConsoleApp/obj/Release/net8.0/ConsoleApp.dll
+/Users/MaxDeval/Desktop/Git/Software-Engineer-Interview/ConsoleApp/obj/Release/net8.0/refint/ConsoleApp.dll
+/Users/MaxDeval/Desktop/Git/Software-Engineer-Interview/ConsoleApp/obj/Release/net8.0/ConsoleApp.pdb
+/Users/MaxDeval/Desktop/Git/Software-Engineer-Interview/ConsoleApp/obj/Release/net8.0/ConsoleApp.genruntimeconfig.cache
+/Users/MaxDeval/Desktop/Git/Software-Engineer-Interview/ConsoleApp/obj/Release/net8.0/ref/ConsoleApp.dll

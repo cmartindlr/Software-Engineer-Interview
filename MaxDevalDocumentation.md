@@ -1,6 +1,8 @@
 Instructions to Run:
 
-TODO
+You must have the .NET runtime installed.
+
+From the ~/ConsoleApp directory, run 'dotnet bin/Release/net8.0/ConsoleApp.dll'
 
 
 Technical note:
