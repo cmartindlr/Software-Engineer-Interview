@@ -1,0 +1,5 @@
+/Users/MaxDeval/Desktop/Git/Software-Engineer-Interview/ConsoleApp/bin/Release/net8.0/publish/ConsoleApp
+/Users/MaxDeval/Desktop/Git/Software-Engineer-Interview/ConsoleApp/bin/Release/net8.0/publish/ConsoleApp.dll
+/Users/MaxDeval/Desktop/Git/Software-Engineer-Interview/ConsoleApp/bin/Release/net8.0/publish/ConsoleApp.deps.json
+/Users/MaxDeval/Desktop/Git/Software-Engineer-Interview/ConsoleApp/bin/Release/net8.0/publish/ConsoleApp.runtimeconfig.json
+/Users/MaxDeval/Desktop/Git/Software-Engineer-Interview/ConsoleApp/bin/Release/net8.0/publish/ConsoleApp.pdb
